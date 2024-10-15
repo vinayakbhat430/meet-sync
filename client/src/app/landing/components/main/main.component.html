@@ -4,7 +4,7 @@
             <h1>Simplify Your Meetings</h1>
             <p>Meet sync helps to manage your time effectively. Create events, set your availability, and let others book time with you seamlessly</p>
             <div class="google-signin">
-                @if(authService.isLoggedIn()){
+                @if(isLoggedIn | async){
                     <button nz-button nzType="primary"><span nz-icon nzType="dashboard" nzTheme="outline" class="icon"></span>Dashboard</button>
                 }
                 @else{

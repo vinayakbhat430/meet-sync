@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meet-sync-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meet-sync
+  template:
+    metadata:
+      labels:
+        app: meet-sync
+    spec:
+      containers:
+      - name: meet-sync
+        image: vinayakbhat430learn/calendly-server
+        resources:
+          limits:
+            memory: "2048Mi"
+            cpu: "1000m"
+        env:
+          - name: MONGO_URI
+            value: 'mongodb://meet-sync-mongo-srv:27017/meet-sync'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meet-sync-srv
+spec:
+  selector:
+    app: meet-sync
+  ports:
+  - name: meet-sync
+    protocol: TCP
+    port: 3000
+    targetPort: 3000

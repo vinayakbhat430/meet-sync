@@ -1,5 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ApiServiceService } from './api-service.service';
 
 
 declare var google: any;
@@ -8,6 +10,13 @@ declare var google: any;
 })
 export class AuthService {
   router = inject(Router);
+  apiService = inject(ApiServiceService)
+  private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
+
+  // Observable for other components to subscribe to
+  get isLoggedIn(): Observable<boolean> {
+    return this.loggedIn.asObservable();  // Expose the logged-in status as an observable
+  }
 
   // Initialize Google OAuth
   initializeGoogleAuth(): void {
@@ -39,6 +48,9 @@ export class AuthService {
     const credential = response.credential; // This is the ID token
     const decodedToken = this.decodeToken(credential);
     sessionStorage.setItem("auth",JSON.stringify(decodedToken));
+    sessionStorage.setItem("authToken", credential);
+    this.loggedIn.next(true);
+    this.apiService.currentUser()
   }
 
 
@@ -48,7 +60,11 @@ export class AuthService {
     this.router.navigate(["/"]);
   }
 
-  isLoggedIn():boolean{
+  hasToken():boolean{
     return !!sessionStorage.getItem("auth")
+  }
+
+  getToken():string|null{
+    return sessionStorage.getItem("authToken")
   }
 }

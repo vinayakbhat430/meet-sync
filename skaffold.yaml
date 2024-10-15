@@ -12,7 +12,17 @@ build:
             src: src/**/*.ts
       docker:
         dockerfile: Dockerfile
+    - image: vinayakbhat430learn/calendly-server
+      context: server
+      sync:
+        manual:
+          - dest: .
+            src: src/**/*.ts
+      docker:
+        dockerfile: Dockerfile
 manifests:
   rawYaml:
     - infra/k8s/ingress-srv.yaml
     - infra/k8s/client-srv.yaml
+    - infra/k8s/meet-sync-backend-srv.yaml
+    - infra/k8s/meet-sync-mongo-srv.yaml
