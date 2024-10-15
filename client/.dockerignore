@@ -1,0 +1,37 @@
+# Ignore node modules
+node_modules
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Ignore environment files (sensitive information)
+src/environments/*.ts
+
+# Ignore build output
+dist
+build
+
+# Ignore local development files
+*.local
+*.env
+*.log
+*.sublime-project
+*.sublime-workspace
+*.vscode/
+.idea/
+*.iml
+
+# Ignore OS and IDE-specific files
+.DS_Store
+Thumbs.db
+.git
+.gitignore
+.sass-cache/
+*.swp
+*.tmp
+*.bak
+*.out
+
+# Ignore Dockerfile and docker-compose files (if they should not be included in the image)
+Dockerfile
+docker-compose*.yml

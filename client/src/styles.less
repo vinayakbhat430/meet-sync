@@ -1,0 +1,41 @@
+/* You can add global styles to this file, and also import other style files */
+body{
+    font-family: "Montserrat", sans-serif;
+}
+
+.flex{
+    display: flex;
+}
+
+.align-center{
+    align-items: center;
+}
+
+.justify-center{
+    justify-content: center;
+}
+
+
+/* Using 0.25 rem to generalize 4px (linear) increments */ 
+.loop(@index) when (@index >= 0) {
+    .m-@{index} {
+        margin: (@index * 0.25rem) !important;
+    }
+    .mt-@{index}{
+        margin-top: (@index * 0.25rem) !important;
+    }
+    .mx-@{index} {
+        margin-left: (@index * 0.25rem) !important;
+        margin-right: (@index * 0.25rem) !important;
+    }
+    .my-@{index} {
+        margin-top: (@index * 0.25rem) !important;
+        margin-bottom: (@index * 0.25rem) !important;
+    }
+    .p-@{index} {
+        padding: (@index * 0.25rem) !important;
+    }
+    .loop(@index - 1);
+}
+
+.loop(20);

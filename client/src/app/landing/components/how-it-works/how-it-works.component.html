@@ -1,0 +1,22 @@
+<div class="how-it-works p-10">
+    <nz-row nzAlign="middle" nzJustify="center">
+        <h1>Key Features</h1>
+    </nz-row>
+    <nz-row nzAlign="middle" nzJustify="space-evenly" [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+        @for(step of howItWorks(); track $index){
+            <nz-col nzXs="24" nzMd="12" nzLg="6" class="gutter-row p-2">
+                    <nz-row nzAlign="middle" nzJustify="center">
+                        <nz-col nzSpan="24" class="flex align-center justify-center">
+                            <div class="icon d-flex align-center justify-center">
+                                <div>
+                                    {{$index + 1}}
+                                </div>
+                            </div>
+                        </nz-col>
+                        <nz-col nzSpan="24" class="flex align-center justify-center"><h3>{{step.step}}</h3></nz-col>
+                        <nz-col nzSpan="24" class="flex align-center justify-center"><p>{{step.description}}</p></nz-col>
+                    </nz-row>
+            </nz-col>
+        }
+    </nz-row>
+</div>

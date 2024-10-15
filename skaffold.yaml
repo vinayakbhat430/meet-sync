@@ -1,0 +1,18 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: calendly-clone
+build:
+  artifacts:
+    - image: vinayakbhat430learn/calendly-client
+      context: client
+      sync:
+        manual:
+          - dest: .
+            src: src/**/*.ts
+      docker:
+        dockerfile: Dockerfile
+manifests:
+  rawYaml:
+    - infra/k8s/ingress-srv.yaml
+    - infra/k8s/client-srv.yaml

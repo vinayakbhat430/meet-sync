@@ -1,0 +1,22 @@
+<div class="features p-10">
+    <nz-row nzAlign="middle" nzJustify="center">
+        <h1>How it works ?</h1>
+    </nz-row>
+    <nz-row nzAlign="middle" nzJustify="space-evenly">
+        @for(feature of features(); track $index){
+            <nz-col nzXs="18" nzLg="6">
+                <nz-card [nzBodyStyle]="{'min-height': '10rem'}" class="my-4 card">
+                    <nz-row nzAlign="middle" nzJustify="center">
+                        <nz-col nzSpan="24" class="flex align-center justify-center">
+                            <div class="icon flex align-center justify-center">
+                                <i nz-icon [nzType]="feature.icon" nzTheme="outline"></i>
+                            </div>
+                        </nz-col>
+                        <nz-col nzSpan="24" class="flex align-center justify-center mt-2"><h3>{{feature.title}}</h3></nz-col>
+                        <nz-col nzSpan="24" class="flex align-center justify-center"><p>{{feature.description}}</p></nz-col>
+                    </nz-row>
+                </nz-card>
+            </nz-col>
+        }
+    </nz-row>
+</div>

@@ -1,0 +1,40 @@
+<div class="calendar-container">
+    <div class="calendar">
+        <div class="calendar-headline" nz-row>
+            <div class="calendar-headline-month" nz-col nzSpan="12">
+                {{firstDayOfActiveMonth().monthShort}},
+                {{ firstDayOfActiveMonth().year }}
+            </div>
+            <div class="calendar-headline-controls" nz-col nzSpan="12">
+                <div nz-row nzAlign="middle" nzJustify="space-around">
+                    <div class="calendar-headline-control" (click)="goToMonth('minus')"><span nz-icon
+                            nzType="double-left" nzTheme="outline"></span>
+                    </div>
+                    <div class="calendar-headline-control calendar-headline-control-today" (click)="goToToday()">Today
+                    </div>
+                    <div class="calendar-headline-control" (click)="goToMonth('plus')"><span nz-icon
+                            nzType="double-right" nzTheme="outline"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="calendar-weeks-grid">
+            @for (weekDay of weekDays(); track $index) {
+            <div class="calendar-weeks-grid-cell">
+                {{weekDay}}
+            </div>
+            }
+        </div>
+        <div class="calendar-grid">
+            @for (dayOfMonth of daysOfMonth(); track $index) {
+            <div (click)="activeDay.set(dayOfMonth)" [ngClass]="{
+                    'calendar-grid-cell':true, 
+                    'calendar-grid-cell-active': activeDay()?.toISODate() === dayOfMonth.toISODate(), 
+                    'calendar-grid-cell-inactive':dayOfMonth.month !== firstDayOfActiveMonth().month
+                    }">
+                {{dayOfMonth.day}}
+            </div>
+            }
+        </div>
+    </div>
+</div>
