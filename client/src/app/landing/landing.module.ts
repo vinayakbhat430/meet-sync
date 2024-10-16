@@ -7,11 +7,12 @@ import { FeaturesComponent } from './components/features/features.component';
 import { HowItWorksComponent } from './components/how-it-works/how-it-works.component';
 import { LandingHomeComponent } from './pages/landing-home/landing-home.component';
 import { CommonModule } from '@angular/common';
+import { FooterComponent } from '../footer/footer.component';
 
 const COMPONENTS = [LandingHomeComponent,LoginComponent, MainComponent, FeaturesComponent, HowItWorksComponent];
 
 @NgModule({
   declarations: [...COMPONENTS],
-  imports: [LandingRoutingModule,SharedModule,CommonModule],
+  imports: [LandingRoutingModule,SharedModule,CommonModule, FooterComponent],
 })
 export class LandingModule {}

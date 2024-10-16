@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal, Signal, WritableSignal } from '@angular/core';
 import { DateTime, Info, Interval } from 'luxon';
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from '../../shared.module';
 
 
 @Component({

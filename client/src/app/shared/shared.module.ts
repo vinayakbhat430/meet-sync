@@ -8,13 +8,13 @@ import { NgModule } from '@angular/core';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 // import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 // import { NzBadgeModule } from 'ng-zorro-antd/badge';
-// import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 // import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 import { NzCardModule } from 'ng-zorro-antd/card';
 // import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 // import { NzCascaderModule } from 'ng-zorro-antd/cascader';
-// import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 // import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 // import { NzCommentModule } from 'ng-zorro-antd/comment';
 // import { NzNoAnimationModule } from 'ng-zorro-antd/core/no-animation';
@@ -32,10 +32,10 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 // import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-// import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
 // import { NzListModule } from 'ng-zorro-antd/list';
 // import { NzMentionModule } from 'ng-zorro-antd/mention';
-// import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 // import { NzModalModule } from 'ng-zorro-antd/modal';
 // import { NzNotificationModule } from 'ng-zorro-antd/notification';
@@ -47,7 +47,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 // import { NzRadioModule } from 'ng-zorro-antd/radio';
 // import { NzRateModule } from 'ng-zorro-antd/rate';
 // import { NzResultModule } from 'ng-zorro-antd/result';
-// import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 // import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 // import { NzSliderModule } from 'ng-zorro-antd/slider';
 // import { NzSpinModule } from 'ng-zorro-antd/spin';
@@ -78,12 +78,12 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
     // NzBackTopModule,
     // NzBadgeModule,
     NzButtonModule,
-    // NzBreadCrumbModule,
+    NzBreadCrumbModule,
     // NzCalendarModule,
     NzCardModule,
     // NzCarouselModule,
     // NzCascaderModule,
-    // NzCheckboxModule,
+    NzCheckboxModule,
     // NzCollapseModule,
     // NzCommentModule,
     // NzDatePickerModule,
@@ -98,10 +98,10 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
     NzIconModule,
     NzInputModule,
     // NzInputNumberModule,
-    // NzLayoutModule,
+    NzLayoutModule,
     // NzListModule,
     // NzMentionModule,
-    // NzMenuModule,
+    NzMenuModule,
     NzMessageModule,
     // NzModalModule,
     // NzNoAnimationModule,
@@ -114,7 +114,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
     // NzRadioModule,
     // NzRateModule,
     // NzResultModule,
-    // NzSelectModule,
+    NzSelectModule,
     // NzSkeletonModule,
     // NzSliderModule,
     // NzSpinModule,

@@ -11,7 +11,6 @@ export class HttpInterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Get the auth token from the AuthService
     const authToken = this.authService.getToken();
-    console.log("Putting the auth token", authToken)
 
     //If no token then make req (Case of google login)
     if(!authToken){

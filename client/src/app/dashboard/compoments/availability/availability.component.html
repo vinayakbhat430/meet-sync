@@ -1,0 +1,47 @@
+<form [formGroup]="scheduleForm">
+    <div formArrayName="schedules">
+        @for(schedule of schedules.controls; track schedule; let i=$index){
+        <div [formGroupName]="$index">
+            <nz-card>
+                <nz-row nzAlign="middle" nzJustify="start" nzGutter="16">
+                    <nz-col nzSpan="1" class="gutter-row">
+                        <label nz-checkbox formControlName="available"></label>
+                    </nz-col>
+                    <nz-col nzSpan="6" class="gutter-row">
+                        <label>
+                            {{schedule.get('weekDay')?.value}}
+                        </label>
+                    </nz-col>
+                    <nz-col nzSpan="6" class="gutter-row">
+                        <label>
+                            From:
+                            <nz-select nzAllowClear nzShowSearch formControlName="startTime">
+                                @for(time of availableTimes;track time){
+                                <nz-option [nzValue]="time" [nzLabel]="time"></nz-option>
+                                }
+                            </nz-select>
+                        </label>
+                    </nz-col>
+                    <nz-col nzSpan="6" class="gutter-row">
+
+                        <label>
+                            To:
+                            <nz-select nzAllowClear nzShowSearch formControlName="endTime"
+                                [nzDisabled]="schedule.get('startTime')?.value === ''">
+                                @for(time of availableTimes|
+                                slice:availableTimes.indexOf(schedule.get('startTime')?.value)+1;track time){
+                                <nz-option [nzValue]="time" [nzLabel]="time"></nz-option>
+                                }
+                            </nz-select>
+                        </label>
+                    </nz-col>
+                </nz-row>
+            </nz-card>
+        </div>
+        }
+        <nz-card>
+            <button nz-button nzType="primary" (click)="saveAvailability()" [disabled]="!scheduleForm.valid">Save</button>
+        </nz-card>
+    </div>
+
+</form>
