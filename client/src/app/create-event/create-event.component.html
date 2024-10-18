@@ -1,0 +1,19 @@
+<nz-row nzAlign="middle" nzJustify="center">
+    <h1 class="py-4">Create Event</h1>
+</nz-row>
+<nz-row>
+    <nz-col nzXs="24" nzLg="12">
+        <app-calendar (selectedDay)="selectedDay($event)" [availabilityDays]="availability()"></app-calendar>
+    </nz-col>
+    <nz-col nzXs="24" nzLg="12">
+        @if(activeDay()){
+            <div class="selected-date py-4">
+                Selected Date: <span class="date">{{activeDay()?.toLocaleString()}}</span>
+            </div>
+            <app-time-slots [bookableSlots]="availableTimeForSelectedDay"></app-time-slots>
+        }
+        @else {
+            <h3>Please select a date to proceed further !</h3>
+        }
+    </nz-col>
+</nz-row>

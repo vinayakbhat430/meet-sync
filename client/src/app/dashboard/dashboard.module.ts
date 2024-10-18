@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardHomeComponent } from './pages/dashboard-home/dashboard-home.component';
@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventsComponent } from './compoments/events/events.component';
 import { MeetingsComponent } from './compoments/meetings/meetings.component';
 import { DashboardComponent } from './compoments/dashboard/dashboard.component';
+import { ConfigService } from '../services/config.service';
 
 const COMPONENTS = [ DashboardHomeComponent, AvailabilityComponent, EventsComponent, MeetingsComponent, DashboardComponent]
 
@@ -21,4 +22,6 @@ const COMPONENTS = [ DashboardHomeComponent, AvailabilityComponent, EventsCompon
     SharedModule,
   ]
 })
-export class DashboardModule { }
+export class DashboardModule { 
+  config = inject(ConfigService);
+}

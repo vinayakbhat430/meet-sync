@@ -35,6 +35,14 @@ body{
     .p-@{index} {
         padding: (@index * 0.25rem) !important;
     }
+    .py-@{index}{
+        padding-top: (@index * 0.25rem) !important;
+        padding-bottom: (@index * 0.25rem) !important;
+    }
+    .px-@{index}{
+        padding-left: (@index * 0.25rem) !important;
+        padding-right: (@index * 0.25rem) !important;
+    }
     .loop(@index - 1);
 }
 

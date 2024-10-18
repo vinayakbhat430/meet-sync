@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './footer/footer.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { ConfigService } from './services/config.service';
 
 @Component({
   selector: 'app-root',
@@ -12,5 +13,4 @@ import { FooterComponent } from './footer/footer.component';
   styleUrl: './app.component.less'
 })
 export class AppComponent {
-  title = 'client';
 }

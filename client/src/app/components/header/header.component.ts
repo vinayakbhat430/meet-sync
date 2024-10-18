@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -9,5 +10,9 @@ import { SharedModule } from '../../shared/shared.module';
   styleUrl: './header.component.less'
 })
 export class HeaderComponent {
+  rotuer = inject(Router)
+  navigateToCreateEvent(){
+    this.rotuer.navigate(["/create-event"]);
+  }
 
 }

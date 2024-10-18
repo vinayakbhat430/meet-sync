@@ -1,0 +1,32 @@
+.time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .time-slot {
+        font-size: 12px;
+        font-weight: 400;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        border: 1px solid rgba(128, 128, 128, 0.551);
+        transition: background-color 0.3s ease;
+
+        &.disabled {
+            cursor: not-allowed;
+            background-color: #d3d3d3;
+            opacity: 0.5;
+        }
+
+        &.selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        &.booked {
+            cursor: not-allowed;
+            background-color: #FF859D;
+            opacity: 0.5;
+        }
+    }
+}

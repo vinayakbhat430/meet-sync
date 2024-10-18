@@ -5,7 +5,7 @@ import { Component, signal, Signal, WritableSignal } from '@angular/core';
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.less'
 })
-export class DashboardHomeComponent {
+export class DashboardHomeComponent  {
   menuList:Signal<MenuItems[]> = signal([
     {icon:'pie-chart',title:'Dashboard'},
     {icon:'calendar',title:'Events'},

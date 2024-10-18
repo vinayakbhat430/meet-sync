@@ -27,9 +27,10 @@
         </div>
         <div class="calendar-grid">
             @for (dayOfMonth of daysOfMonth(); track $index) {
-            <div (click)="activeDay.set(dayOfMonth)" [ngClass]="{
+            <div (click)="updateSelectedDay(dayOfMonth)" [ngClass]="{
                     'calendar-grid-cell':true, 
                     'calendar-grid-cell-active': activeDay()?.toISODate() === dayOfMonth.toISODate(), 
+                    'unavailable-days': availabilityDays().includes(dayOfMonth.weekdayLong||''),
                     'calendar-grid-cell-inactive':dayOfMonth.month !== firstDayOfActiveMonth().month
                     }">
                 {{dayOfMonth.day}}

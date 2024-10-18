@@ -48,6 +48,35 @@
             border-radius: 4px;
             user-select: none;
         }
+        .unavailable-days{
+            background-color: #FF859D;
+            color:white;
+            cursor: not-allowed;
+            opacity: 0.6;
+            position: relative;
+            &::after {
+                content: 'Not Available!'; /* The message to display */
+                position: absolute;
+                bottom: 100%; /* Position above the element */
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #333;
+                color: white;
+                padding: 5px;
+                border-radius: 4px;
+                opacity: 0;
+                visibility: hidden;
+                white-space: nowrap;
+                font-size: 12px;
+                z-index: 10;
+                transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+              }
+              
+              &:hover::after {
+                opacity: 1;
+                visibility: visible;
+              }
+        }
 
         .calendar-grid-cell-active {
             background-color: #007bff;
@@ -68,3 +97,4 @@
         }
     }
 }
+

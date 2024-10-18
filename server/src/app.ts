@@ -6,6 +6,8 @@ import 'express-async-errors';
 import { NotFoundError } from './errors/not-found-error';
 import { errorHandler } from './middleware/error-handler';
 import { UserRouter } from './routes/user';
+import { PostAvailabilityRouter } from './routes/post-availablity';
+import { GetAvailabilityRouter } from './routes/get-availability';
 
 
 
@@ -22,6 +24,8 @@ app.use(
 )
 
 app.use(UserRouter);
+app.use(PostAvailabilityRouter);
+app.use(GetAvailabilityRouter);
 
 
 

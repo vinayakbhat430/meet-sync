@@ -1,0 +1,12 @@
+<div class="time-slots">
+    @for(slot of timeSlots();track $index; ){
+
+    <div (click)="toggleSelection($index)" [class.disabled]="!slot.isSelected && !slot.canSelect" [class.selected]="slot.isSelected" 
+        class="time-slot">
+        {{ slot.time }}
+    </div>
+    }
+</div>
+<div class="py-4">
+    <button nz-button nzType="primary">Next <span nz-icon nzType="arrow-right" nzTheme="outline"></span></button>
+</div>

@@ -1,32 +1,22 @@
-import { Request, Response, NextFunction } from "express";
-import Jwt from "jsonwebtoken";
+import { BadRequestError } from "../errors/bad-request-error";
+import { NotAuthorizedError } from "../errors/not-authorized-error";
 
-interface UserPayload {
-  id: string;
-  email: string;
+export const currentUser = (authToken:string|undefined)=> {
+  if (!authToken) {
+    throw new NotAuthorizedError();
+  }
+  const token = authToken.replace("Bearer ", "");
+
+  if (!token) {
+    throw new BadRequestError("Invalid token");
+  }
+
+  const { name, email, picture } = decodeToken(token);
+
+  return { name, email, picture}
 }
 
-declare global {
-  namespace Express {
-    interface Request {
-      currentUser?: UserPayload;
-    }
-  }
+
+function decodeToken(token: string) {
+  return JSON.parse(atob(token.split(".")[1]));
 }
-
-export const CurrentUser = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (!req.session?.jwt) {
-    return next();
-  }
-  const payload = Jwt.verify(
-    req.session.jwt,
-    process.env.JWT_KEY!
-  ) as UserPayload;
-  req.currentUser = payload;
-
-  next();
-};

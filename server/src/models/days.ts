@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 interface DaysAttrs {
-    availabilityId:string;
     day:string;
     startTime:string;
     endTime:string;
@@ -12,27 +11,22 @@ interface DaysModel extends mongoose.Model<DaysDoc> {
 }
 
 export interface DaysDoc extends mongoose.Document {
-    availabilityId:string;
     day:string;
-    startTime:Date;
-    endTime:Date;
+    startTime:string;
+    endTime:string;
 }
 
 const daysSchema = new mongoose.Schema({
-    availabilityId: {
-    type: String,
-    required: true,
-  },
   day: {
     type: String,
     required: true,
   },
   startTime:{
-    type:mongoose.Schema.Types.Date,
+    type:String,
     required:true
   },
   endTime:{
-    type:mongoose.Schema.Types.Date,
+    type:String,
     required:true
   }
 },{

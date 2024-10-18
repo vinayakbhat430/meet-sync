@@ -2,25 +2,14 @@ import express, { Request, Response } from "express";
 import { NotAuthorizedError } from "../errors/not-authorized-error";
 import { User } from "../models/user";
 import { BadRequestError } from "../errors/bad-request-error";
+import { currentUser } from "../middleware/current-user";
 
-function decodeToken(token: string) {
-  return JSON.parse(atob(token.split(".")[1]));
-}
 
 const router = express.Router();
 router.get("/api/user", async (req: Request, res: Response) => {
   const authorizationToken = req.headers.authorization;
-  console.log(authorizationToken);
-  if (!authorizationToken) {
-    throw new NotAuthorizedError();
-  }
-  const token = authorizationToken.replace("Bearer ", "");
 
-  if (!token) {
-    throw new BadRequestError("Invalid token");
-  }
-
-  const { name, email, picture } = decodeToken(authorizationToken);
+  const { name, email, picture } = currentUser(authorizationToken);
 
   const user = await User.find({ email: email });
 

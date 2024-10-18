@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Availability, AvailabilityModel, AvailabilityPostInterface } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -7,9 +8,15 @@ import { Injectable } from '@angular/core';
 export class ApiServiceService {
   constructor(private http: HttpClient) {}
 
-  async currentUser() {
-    this.http.get('/api/user').subscribe(d=>{
-      console.log(d)
-    });
+  currentUser() {
+    this.http.get('/api/user').subscribe();
+  }
+
+  getAvailability(){
+    return this.http.get<Availability>('/api/availability');
+  }
+
+  postAvailability(data: AvailabilityPostInterface[]){
+    return this.http.post<Availability>('/api/availability',data)
   }
 }

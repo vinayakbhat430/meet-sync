@@ -9,7 +9,7 @@
                     </nz-col>
                     <nz-col nzSpan="6" class="gutter-row">
                         <label>
-                            {{schedule.get('weekDay')?.value}}
+                            {{schedule.get('day')?.value}}
                         </label>
                     </nz-col>
                     <nz-col nzSpan="6" class="gutter-row">
@@ -26,8 +26,7 @@
 
                         <label>
                             To:
-                            <nz-select nzAllowClear nzShowSearch formControlName="endTime"
-                                [nzDisabled]="schedule.get('startTime')?.value === ''">
+                            <nz-select nzAllowClear nzShowSearch formControlName="endTime">
                                 @for(time of availableTimes|
                                 slice:availableTimes.indexOf(schedule.get('startTime')?.value)+1;track time){
                                 <nz-option [nzValue]="time" [nzLabel]="time"></nz-option>
