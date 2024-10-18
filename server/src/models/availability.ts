@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { DaysDoc } from "./days";
 
 interface AvailabilityAttrs {
-  userId: string;
+  email: string;
   days: DaysDoc[];
 }
 
@@ -11,17 +11,17 @@ interface UserModel extends mongoose.Model<AvailabilityDoc> {
 }
 
 interface AvailabilityDoc extends mongoose.Document {
-  userId: string;
+  email: string;
   days: DaysDoc[];
 }
 
 const availabilitySchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
+    email: {
+      type: String,
       required: true,
     },
-    email: [
+    days: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref:'Days',
@@ -44,6 +44,6 @@ availabilitySchema.statics.build = (attr: AvailabilityAttrs) => {
   return new Availability(attr);
 };
 
-const Availability = mongoose.model<AvailabilityDoc, UserModel>("User", availabilitySchema);
+const Availability = mongoose.model<AvailabilityDoc, UserModel>("Availability", availabilitySchema);
 
 export { Availability };

@@ -26,7 +26,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 // import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 // import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 // import { NzEmptyModule } from 'ng-zorro-antd/empty';
-// import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 // import { NzI18nModule } from 'ng-zorro-antd/i18n';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -56,7 +56,7 @@ import { CommonModule } from '@angular/common';
 // import { NzSpinModule } from 'ng-zorro-antd/spin';
 // import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 // import { NzStepsModule } from 'ng-zorro-antd/steps';
-// import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 // import { NzTableModule } from 'ng-zorro-antd/table';
 // import { NzTabsModule } from 'ng-zorro-antd/tabs';
 // import { NzTagModule } from 'ng-zorro-antd/tag';
@@ -96,7 +96,7 @@ const NZZORRO_MODULES = [
   // NzDrawerModule,
   // NzDropDownModule,
   // NzEmptyModule,
-  // NzFormModule,
+  NzFormModule,
   NzGridModule,
   // NzI18nModule,
   NzIconModule,
@@ -124,7 +124,7 @@ const NZZORRO_MODULES = [
   // NzSpinModule,
   // NzStatisticModule,
   // NzStepsModule,
-  // NzSwitchModule,
+  NzSwitchModule,
   // NzTableModule,
   // NzTabsModule,
   // NzTagModule,

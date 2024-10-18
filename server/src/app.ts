@@ -8,6 +8,11 @@ import { errorHandler } from './middleware/error-handler';
 import { UserRouter } from './routes/user';
 import { PostAvailabilityRouter } from './routes/post-availablity';
 import { GetAvailabilityRouter } from './routes/get-availability';
+import { GetEventsRouter } from './routes/get-events';
+import { PostEventRouter } from './routes/post-event';
+import { GetBookingsRouter } from './routes/get-bookings';
+import { PostBookingRouter } from './routes/post-bookings';
+import { DeleteEventsRouter } from './routes/delete-event';
 
 
 
@@ -26,6 +31,11 @@ app.use(
 app.use(UserRouter);
 app.use(PostAvailabilityRouter);
 app.use(GetAvailabilityRouter);
+app.use(GetEventsRouter);
+app.use(PostEventRouter);
+app.use(DeleteEventsRouter);
+app.use(GetBookingsRouter);
+app.use(PostBookingRouter);
 
 
 

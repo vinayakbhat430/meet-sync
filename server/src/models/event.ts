@@ -6,7 +6,7 @@ interface EventAttrs {
     description:string;
     duration: number;
     userId:string;
-    isPrivate:string;
+    isPrivate:boolean;
     bookings:BookingsDoc[]
 
 }
@@ -19,8 +19,8 @@ export interface EventDoc extends mongoose.Document {
     title:string;
     description:string;
     duration: number;
-    userId:string;
-    isPrivate:string;
+    email:string;
+    isPrivate:boolean;
     bookings:BookingsDoc[]
 }
 
@@ -37,8 +37,8 @@ const eventSchema = new mongoose.Schema({
     type:Number,
     required:true
   },
-  userId:{
-    type:mongoose.Schema.Types.ObjectId,
+  email:{
+    type:String,
     required:true
   },
   isPrivate:{

@@ -50,7 +50,7 @@ export class AuthService {
     sessionStorage.setItem("auth",JSON.stringify(decodedToken));
     sessionStorage.setItem("authToken", credential);
     this.loggedIn.next(true);
-    this.apiService.currentUser();
+    this.apiService.currentUser().subscribe();
     this.router.navigate(["/dashboard"]);
 
   }

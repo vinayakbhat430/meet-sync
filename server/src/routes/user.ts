@@ -11,9 +11,9 @@ router.get("/api/user", async (req: Request, res: Response) => {
 
   const { name, email, picture } = currentUser(authorizationToken);
 
-  const user = await User.find({ email: email });
+  const user = await User.findOne({ email: email });
 
-  if (user.length) {
+  if (user) {
     res.send({ message: "Sign In Successful", user: user });
   } else {
     const buildUser = User.build({ name, email, picture });

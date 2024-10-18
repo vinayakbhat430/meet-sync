@@ -1,19 +1,42 @@
 <nz-row nzAlign="middle" nzJustify="center">
     <h1 class="py-4">Create Event</h1>
 </nz-row>
-<nz-row>
+<nz-row nzAlign="middle" nzJustify="center">
     <nz-col nzXs="24" nzLg="12">
-        <app-calendar (selectedDay)="selectedDay($event)" [availabilityDays]="availability()"></app-calendar>
-    </nz-col>
-    <nz-col nzXs="24" nzLg="12">
-        @if(activeDay()){
-            <div class="selected-date py-4">
-                Selected Date: <span class="date">{{activeDay()?.toLocaleString()}}</span>
-            </div>
-            <app-time-slots [bookableSlots]="availableTimeForSelectedDay"></app-time-slots>
-        }
-        @else {
-            <h3>Please select a date to proceed further !</h3>
-        }
+        <form nz-form [formGroup]="eventForm">
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="title">Event Title</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Event Title is needed!">
+                    <input nz-input formControlName="title" id="title" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="Description">Description</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your Description!">
+                    <textarea rows="4" nz-input id="description" formControlName="description"></textarea>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="duration">Number of slots</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Number of slots is needed!">
+                    <nz-select nzAllowClear nzShowSearch formControlName="duration" id="duration">
+                        @for(time of slots();track time){
+                        <nz-option [nzValue]="time" [nzLabel]="time"></nz-option>
+                        }
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="private">Private</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <nz-switch id="private" formControlName="isPrivate"></nz-switch>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row nzAlign="middle" nzJustify="space-between">
+                <nz-form-control [nzSpan]="12" [nzOffset]="6">
+                    <button nz-button nzType="primary" (click)="createEvent()">Create Event</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
     </nz-col>
 </nz-row>

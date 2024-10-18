@@ -4,12 +4,14 @@ import {
   effect,
   input,
   OnChanges,
+  output,
   signal,
   Signal,
   SimpleChanges,
   WritableSignal,
 } from '@angular/core';
 import { timeList } from '../../time-slots.util';
+import { TimeSlots } from '../../../interfaces';
 
 @Component({
   selector: 'app-time-slots',
@@ -19,6 +21,7 @@ import { timeList } from '../../time-slots.util';
 export class TimeSlotsComponent implements OnChanges {
   // Signal representing time slots with default values
   bookedSlots = input<string[]>();
+  nextEvent = output<TimeSlots[]>();
   bookableSlots = input<{ startTime: string; endTime: string }>({
     startTime: '12:00 AM',
     endTime: '11:59 PM',
@@ -122,12 +125,10 @@ export class TimeSlotsComponent implements OnChanges {
       );
     }
   }
+
+  //emit the selected slots to the parent
+  nextBtnClick(){
+    this.nextEvent.emit(this.timeSlots().filter(slots=> slots.isSelected))
+  }
 }
 
-// Interface for TimeSlots
-interface TimeSlots {
-  time: string;
-  isSelected: boolean;
-  canSelect: boolean;
-  isBooked: boolean;
-}
