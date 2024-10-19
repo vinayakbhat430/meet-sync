@@ -1,1 +1,20 @@
+<nz-row nzAlign="top" nzJustify="center">
+    <nz-col nzSpan="24">
+        <nz-row nzAlign="middle" nzJustify="center">
+            <div class="py-4 title align-center">Create Meeting</div>
+        </nz-row>
+    </nz-col>
+    <nz-col nzLg="12" nzSm="24">
+        <app-calendar [availabilityDays]="availability()" (selectedDay)="selectedDay($event)"></app-calendar>
 
+    </nz-col>
+    <nz-col nzLg="12" nzSm="24" class="p-4">
+        @if(activeDay()){
+        <app-time-slots [bookableSlots]="availableTimeForSelectedDay" (nextEvent)="slotsBooked($event)"></app-time-slots>
+        }
+        @else {
+        <div>Please select date to proceed!</div>
+        }
+    </nz-col>
+
+</nz-row>

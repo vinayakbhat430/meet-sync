@@ -1,1 +1,24 @@
-<p>meetings works!</p>
+<nz-row nzAlign="middle" nzJustify="start" nzGutter="32">
+    @for(meeting of meetingList(); track $index){
+        <nz-col nzLg="8" nzSm="24" class="gutter-row">
+            <nz-card>
+                <nz-row nzAlign="middle" nzJustify="center">
+                    <nz-col nzSpan="24">
+                        <h3>{{meeting.name}}</h3>
+                    </nz-col>
+                    <nz-col nzSpan="24" class="py-2">
+                        {{meeting.additionalInfo}}
+                    </nz-col>
+                    <nz-col nzLg="12" nzSm="24" class="py-2">
+                        <button nz-button nzType="primary" nzDanger (click)="showDeleteConfirm(meeting.id!)"><span nz-icon nzType="delete" nzTheme="outline"></span>Cancel meeting</button>
+                    </nz-col>
+                </nz-row>
+            </nz-card>
+        </nz-col>
+    }
+</nz-row>
+
+@if(meetingList().length === 0 ){
+    <div>No Meetings found</div>
+}
+

@@ -1,12 +1,12 @@
 export interface User {
-    email:string;
-    id:string;
-    picture:string;
+  email: string;
+  id: string;
+  picture: string;
 }
 
-export interface UserResponse{
-    message:string;
-    user:User
+export interface UserResponse {
+  message: string;
+  user: User;
 }
 
 // Interface for the schedule data model
@@ -32,28 +32,25 @@ export interface Events {
   duration: number;
   email: string;
   isPrivate: boolean;
-  bookings: MeetingResponse[];
+  bookings: Meeting[];
 }
-export interface EventsResponse extends Events{
-    id:string
+export interface EventsResponse extends Events {
+  id: string;
 }
 
-export interface Meeting{
+export interface Meeting {
+  id?: string;
   eventId?: string;
-  userId: string;
   name: string;
   email: string;
   additionalInfo: string;
   startTime: Date;
   endTime: Date;
-}
-
-
-export interface MeetingResponse extends Meeting {
+  slot: string[];
+  attendees: string[];
   meetLink: string;
   googleEventId: string;
 }
-
 
 // Interface for TimeSlots
 export interface TimeSlots {
@@ -61,4 +58,17 @@ export interface TimeSlots {
   isSelected: boolean;
   canSelect: boolean;
   isBooked: boolean;
+}
+
+export interface EventDetails {
+  eventId?: string;
+  summary: string; // Title of the event
+  description?: string; // Description of the event (optional)
+  startTime: string; // Event start time in ISO format (e.g., '2024-10-21T10:00:00Z')
+  endTime: string; // Event end time in ISO format (e.g., '2024-10-21T11:00:00Z')
+  email: { email: string }[]; // List of attendee email addresses
+  id: string;
+  startDate: Date;
+  endDate: Date;
+  slot: string[];
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Availability, AvailabilityModel, AvailabilityPostInterface, Events, EventsResponse, Meeting, UserResponse } from '../interfaces';
 
@@ -12,8 +12,12 @@ export class ApiServiceService {
     return this.http.get<UserResponse>('/api/user');
   }
 
-  getAvailability(){
-    return this.http.get<Availability>('/api/availability');
+  getAvailability(email?:string){
+    let params = new HttpParams()
+    if(email){
+      params = params.set('email', email)
+    }
+    return this.http.get<Availability>('/api/availability', {params});
   }
 
   postAvailability(data: AvailabilityPostInterface[]){
@@ -23,6 +27,11 @@ export class ApiServiceService {
   getEvents(){
     return this.http.get<EventsResponse[]>('/api/events');
   }
+
+  getEventsById(eventId:string){
+    return this.http.get<EventsResponse>(`/api/event/${eventId}`);
+  }
+
 
   deleteEvent(eventId:string){
     return this.http.delete(`/api/events/${eventId}`);

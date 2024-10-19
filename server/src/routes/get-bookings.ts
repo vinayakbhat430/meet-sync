@@ -12,9 +12,9 @@ router.get("/api/bookings", async (req: Request, res: Response) => {
 
   const bookings = await Bookings.find({
     email: email
-  })
+  });
 
-  if(bookings){
+  if(!bookings){
     throw new NotFoundError()
   }
   res.status(200).send(bookings);

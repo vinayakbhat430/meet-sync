@@ -15,6 +15,18 @@ export class AuthService {
   calendarService = inject(CalendarService);
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
+  private redirectUrl: string | null = null;
+
+  // Store the attempted route
+  setRedirectUrl(url: string): void {
+    this.redirectUrl = url;
+  }
+
+  // Retrieve the stored route
+  getRedirectUrl(): string | null {
+    return this.redirectUrl;
+  }
+
   // Observable for other components to subscribe to
   get isLoggedIn(): Observable<boolean> {
     return this.loggedIn.asObservable();  // Expose the logged-in status as an observable
@@ -56,16 +68,10 @@ export class AuthService {
     sessionStorage.setItem("auth", JSON.stringify(decodedToken));
     sessionStorage.setItem("authToken", credential);
 
-    // Request OAuth access token for Google Calendar
-    try {
-      await this.calendarService.loginWithGoogle(); // This will request and store the OAuth access token
-    } catch (error) {
-      console.error('Error during Google OAuth login', error);
-    }
-
     this.loggedIn.next(true);
     this.apiService.currentUser().subscribe();
-    this.router.navigate(["/dashboard"]);
+    const targetURL = this.getRedirectUrl() || "/dashboard"
+    this.router.navigate([targetURL]);
   }
 
   signout(): void {

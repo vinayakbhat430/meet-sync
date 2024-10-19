@@ -3,8 +3,8 @@ import { ApiServiceService } from '../../../services/api-service.service';
 import { Subject } from 'rxjs';
 import { EventsResponse, Meeting, User } from '../../../interfaces';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { CalendarService } from '../../../services/calendar.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { Location } from '@angular/common';
 
 declare const createGoogleEvent: any;
 
@@ -18,6 +18,7 @@ export class EventsComponent implements OnInit, OnDestroy{
 
   messageService = inject(NzMessageService);
   modal = inject(NzModalService);
+  location = inject(Location)
 
 
   private readonly ngUnsubscribe$ = new Subject<void>()
@@ -56,58 +57,12 @@ export class EventsComponent implements OnInit, OnDestroy{
     });
   }
 
-  // createMeeting(){
-  //   const dummyMeeting1: Meeting = {
-  //     eventId: 'event-123',
-  //     userId: 'user-001',
-  //     name: 'John Doe',
-  //     email: 'vinayakbhat430.learn@gmail.com',
-  //     additionalInfo: 'Looking forward to this meeting!',
-  //     startTime: new Date('2024-10-20T09:00:00Z'),
-  //     endTime: new Date('2024-10-20T09:30:00Z'),
-  //   };
-  //   const dummyEventResponse: EventsResponse = {
-  //     id: 'event-123',
-  //     title: 'Team Meeting',
-  //     description: 'A meeting to discuss the project progress and next steps.',
-  //     duration: 30,  // in minutes
-  //     email: 'vinayakbhat430.signups@gmail.com',
-  //     isPrivate: false,
-  //     bookings: []
-  //   };
-  //   const user:User={
-  //     email: 'vinayakbhat430.signups@gmail.com',
-  //     id: '',
-  //     picture: ''
-  //   }
-
-  //   const startTime = new Date('2024-10-20T09:00:00Z').toISOString().slice(0, 18) + '-07:00';
-  //   const endTime = new Date('2024-10-20T09:30:00Z').toISOString().slice(0, 18) + '-07:00';
-  //   const eventDetails = {
-  //     email: 'vinayakbhat430.signups@gmail.com',
-  //     startTime: startTime,
-  //     endTime: endTime,
-  //   };
-  //   console.info(eventDetails);
-  //   //this.generateICSFile()
-  //   createGoogleEvent(eventDetails);
-  //   // this.calendar.createBooking(dummyMeeting1,dummyEventResponse, user)
-  // }
-
-  createMeeting() {
-    const eventDetails = {
-      summary: 'My Meeting',
-      location: '800 Howard St., San Francisco, CA',
-      description: 'Meeting description',
-      startTime: '2024-10-15T10:00:00',
-      endTime: '2024-10-15T12:00:00',
-      email: 'attendee@example.com',
-    };
-
-    // this.calendar.createGoogleEvent(eventDetails).then(() => {
-    //   console.log('Event Created!');
-    // });
+  copyLink(eventId:string,email:string){
+    const url = `https://meet-sync.dev/join-event/${eventId}/${email}`
+    navigator.clipboard.writeText(url);
+    this.messageService.info("Copied Link successfully!")
   }
+
 
 
 }

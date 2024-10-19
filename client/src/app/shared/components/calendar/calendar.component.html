@@ -30,7 +30,7 @@
             <div (click)="updateSelectedDay(dayOfMonth)" [ngClass]="{
                     'calendar-grid-cell':true, 
                     'calendar-grid-cell-active': activeDay()?.toISODate() === dayOfMonth.toISODate(), 
-                    'unavailable-days': availabilityDays().includes(dayOfMonth.weekdayLong||''),
+                    'unavailable-days': availability().includes(dayOfMonth.weekdayLong||''),
                     'calendar-grid-cell-inactive':dayOfMonth.month !== firstDayOfActiveMonth().month
                     }">
                 {{dayOfMonth.day}}

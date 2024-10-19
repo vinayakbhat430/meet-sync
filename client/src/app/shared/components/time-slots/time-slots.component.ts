@@ -2,6 +2,7 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   OnChanges,
   output,
@@ -12,6 +13,8 @@ import {
 } from '@angular/core';
 import { timeList } from '../../time-slots.util';
 import { TimeSlots } from '../../../interfaces';
+import { max } from 'rxjs';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-time-slots',
@@ -21,7 +24,11 @@ import { TimeSlots } from '../../../interfaces';
 export class TimeSlotsComponent implements OnChanges {
   // Signal representing time slots with default values
   bookedSlots = input<string[]>();
+  maxSlots = input<number>(100);
   nextEvent = output<TimeSlots[]>();
+
+  messageService = inject(NzMessageService);
+
   bookableSlots = input<{ startTime: string; endTime: string }>({
     startTime: '12:00 AM',
     endTime: '11:59 PM',
@@ -30,7 +37,7 @@ export class TimeSlotsComponent implements OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(JSON.stringify(changes['bookableSlots'].currentValue) !== JSON.stringify(changes['bookableSlots'].previousValue)){
+    if(JSON.stringify(changes['bookableSlots']?.currentValue) !== JSON.stringify(changes['bookableSlots']?.previousValue)){
       this.timeSlots.set(
         timeList
         .slice(
@@ -49,14 +56,21 @@ export class TimeSlotsComponent implements OnChanges {
   toggleSelection(index: number): void {
     const currentSlots = this.timeSlots();
 
+    const selectedSlots = this.timeSlots().filter((slot) => slot.isSelected);
+
     // If the slot is already selected, deselect it
     if (currentSlots[index].isSelected) {
       this.updateTimeSlot(index, { isSelected: false });
     }
     // If the slot can be selected, select it
-    else if (this.canSelect(index)) {
+    else if (this.canSelect(index) && selectedSlots.length < this.maxSlots()) {
       this.updateTimeSlot(index, { isSelected: true });
     }
+
+    if( selectedSlots.length >= this.maxSlots()){
+      this.messageService.error(`This event can be max ${this.maxSlots()*30} minutes!`)
+    }
+    this.nextBtnClick();
 
     this.updateCanSelectStatus();
   }

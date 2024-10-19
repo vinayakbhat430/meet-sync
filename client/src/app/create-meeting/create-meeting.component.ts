@@ -6,22 +6,26 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { DateTime, Info } from 'luxon';
-import { Subject, takeUntil } from 'rxjs';
-import { AvailabilityPostInterface, TimeSlots } from '../interfaces';
+import {  Subject,  takeUntil } from 'rxjs';
+import { AvailabilityPostInterface, EventsResponse, TimeSlots } from '../interfaces';
 import { ApiServiceService } from '../services/api-service.service';
-import { ConfigService } from '../services/config.service';
+import { SharedModule } from "../shared/shared.module";
+import { ActivatedRoute } from '@angular/router';
+import { MeetingConfigService } from '../services/meeting-config.service';
 
 @Component({
   selector: 'app-create-meeting',
   standalone: true,
-  imports: [],
+  imports: [SharedModule],
   templateUrl: './create-meeting.component.html',
   styleUrl: './create-meeting.component.less',
 })
 export class CreateMeetingComponent implements OnInit {
-  configService = inject(ConfigService);
+  configService = inject(MeetingConfigService);
 
   apiService = inject(ApiServiceService);
+
+  route = inject(ActivatedRoute);
 
   activeDay: WritableSignal<DateTime | null> = signal(null);
 
@@ -36,9 +40,15 @@ export class CreateMeetingComponent implements OnInit {
   showNext: WritableSignal<boolean> = signal(false);
   selectedTimeSlots: WritableSignal<TimeSlots[]> = signal([]);
 
+  maxSlots:WritableSignal<number> =signal(100);
+  eventData: WritableSignal<EventsResponse|undefined> = signal(undefined);
+
   private readonly ngUnsubscribe$ = new Subject<void>();
+  eventId: any;
+  emailId: any;
 
   ngOnInit(): void {
+    this.getParamsAndFetchAvailability()
     this.configService.availability
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((d) => {
@@ -57,6 +67,24 @@ export class CreateMeetingComponent implements OnInit {
           this.availability.set(weekDays);
         }
       });
+  }
+
+  getParamsAndFetchAvailability(){
+    this.route.params.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((params) => {
+      this.eventId = params['eventId']; // Fetch eventId from route params
+      this.emailId = params['emailId']; // Fetch emailId from route params
+
+      // Use emailId to fetch availability if available
+      this.configService.fetchAvailabilityByEmail(this.emailId);
+      this.getEventById(this.eventId)
+    });
+  }
+
+  getEventById(eventId:string) {
+    this.apiService.getEventsById(eventId).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(event=>{
+      this.eventData.set(event)
+      this.maxSlots.set(event.duration/30);
+    })
   }
 
   selectedDay(day: DateTime) {

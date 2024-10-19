@@ -2,12 +2,13 @@ import mongoose from "mongoose";
 
 interface BookingsAttrs {
     eventId?:string;
-    userId:string;
     name: string;
     email:string;
     additionalInfo:string;
     startTime:Date;
     endTime:Date;
+    slot:string[];
+    attendees:string[];
     meetLink:string;
     googleEventId:string;
 }
@@ -18,12 +19,13 @@ interface BookingsModel extends mongoose.Model<BookingsDoc> {
 
 export interface BookingsDoc extends mongoose.Document {
     eventId?:string;
-    userId:string;
     name: string;
     email:string;
     additionalInfo:string;
     startTime:Date;
     endTime:Date;
+    slot:string[];
+    attendees:string[]
     meetLink:string;
     googleEventId:string;
 }
@@ -32,10 +34,6 @@ const bookingsSchema = new mongoose.Schema(
     {
         eventId: {
             type: String, 
-        },
-        userId: {
-            type: String,
-            required: true, 
         },
         name: {
             type: String,
@@ -57,6 +55,18 @@ const bookingsSchema = new mongoose.Schema(
             type: Date,
             required: true,
         },
+        slot:[
+            {
+                type:String,
+                required:true
+            }
+        ],
+        attendees:[
+            {
+                type:String,
+                required:true
+            }
+        ],
         meetLink: {
             type: String,
             required: true,

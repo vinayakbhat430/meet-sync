@@ -36,9 +36,14 @@ export class ConfigService {
     this.apiService.currentUser().subscribe((d) => {
       if(d){
         this._user.next(d.user);
+        this.fetchAvailability();
       }
     });
 
+    
+  }
+
+  fetchAvailability(){
     this.apiService.getAvailability().subscribe((avblty) => {
       if(avblty){
         this._availability.next(avblty);

@@ -9,11 +9,20 @@ import { NotFoundError } from "../errors/not-found-error";
 const router = express.Router();
 router.get("/api/availability", async (req: Request, res: Response) => {
   const authorizationToken = req.headers.authorization;
+  let findEmail = undefined;
+  const queryEmail = req.query.email as string | undefined;
 
-  const { name, email, picture } = currentUser(authorizationToken);
+
+  if(!queryEmail){
+    const { name, email, picture } = currentUser(authorizationToken);
+    findEmail = email
+  }
+  else{
+    findEmail = queryEmail
+  }
 
   const availability = await Availability.findOne({
-    email: email
+    email: findEmail
   }).populate('days');
 
   if(!availability){

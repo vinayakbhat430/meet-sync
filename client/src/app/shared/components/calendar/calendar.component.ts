@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, output, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, computed, input, OnChanges, output, signal, Signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { DateTime, Info, Interval } from 'luxon';
 import { SharedModule } from '../../shared.module';
 
@@ -9,13 +9,16 @@ import { SharedModule } from '../../shared.module';
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.less'
 })
-export class CalendarComponent {
-  availabilityDays = input<string[]>([])
+export class CalendarComponent implements OnChanges {
+ 
+  availabilityDays = input<string[]>([]);
+
   selectedDay = output<DateTime>()
   today: Signal<DateTime> = signal(DateTime.local());
   firstDayOfActiveMonth :WritableSignal<DateTime> = signal(
     this.today().startOf('month')
   );
+  availability: WritableSignal<string[]> = signal([])
   activeDay: WritableSignal<DateTime | null> = signal(null)
   weekDays:Signal<string[]> = signal(Info.weekdays('short'));
   daysOfMonth: Signal<DateTime[]> = computed(()=>{
@@ -32,6 +35,12 @@ export class CalendarComponent {
     });
   });
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(JSON.stringify(changes['availabilityDays']?.currentValue) !== JSON.stringify(changes['availabilityDays']?.previousValue)){
+      this.availability.set(this.availabilityDays())
+    }
+  }
+
 
   goToMonth(mode:'minus'|'plus'){
     this.firstDayOfActiveMonth.set(this.firstDayOfActiveMonth()[mode]({month:1}))
@@ -43,7 +52,7 @@ export class CalendarComponent {
   }
 
   updateSelectedDay(dayOfMonth:DateTime){
-    if(!this.availabilityDays().includes(dayOfMonth.weekdayLong || '')){
+    if(!this.availability().includes(dayOfMonth.weekdayLong || '')){
       this.activeDay.set(dayOfMonth)
       this.selectedDay.emit(dayOfMonth);
     }

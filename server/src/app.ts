@@ -13,6 +13,7 @@ import { PostEventRouter } from './routes/post-event';
 import { GetBookingsRouter } from './routes/get-bookings';
 import { PostBookingRouter } from './routes/post-bookings';
 import { DeleteEventsRouter } from './routes/delete-event';
+import { GetEventByIdRouter } from './routes/get-event-byID';
 
 
 
@@ -33,6 +34,7 @@ app.use(PostAvailabilityRouter);
 app.use(GetAvailabilityRouter);
 app.use(GetEventsRouter);
 app.use(PostEventRouter);
+app.use(GetEventByIdRouter);
 app.use(DeleteEventsRouter);
 app.use(GetBookingsRouter);
 app.use(PostBookingRouter);

@@ -49,3 +49,17 @@ export const timeList = [
     '11:30 PM',
     '11:59 PM'
   ];
+
+  export function  formatDateToGoogleDateTime(date: Date): string {
+    const isoString = date.toISOString(); // Convert to ISO string in UTC
+    const timezoneOffset = -date.getTimezoneOffset(); // Get the timezone offset in minutes
+  
+    const hoursOffset = Math.floor(Math.abs(timezoneOffset) / 60);
+    const minutesOffset = Math.abs(timezoneOffset) % 60;
+    const offsetSign = timezoneOffset >= 0 ? '+' : '-';
+  
+    const formattedOffset = `${offsetSign}${String(hoursOffset).padStart(2, '0')}:${String(minutesOffset).padStart(2, '0')}`;
+  
+    // Remove the milliseconds part from the ISO string and append the timezone offset
+    return isoString.replace(/\.\d{3}Z$/, '') + formattedOffset;
+  }

@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { ApiServiceService } from './api-service.service';
+import { EventDetails } from '../interfaces';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 declare var gapi: any;
 declare var google: any;
@@ -15,6 +18,9 @@ export class CalendarService {
   private gapiInited = false;
   private gisInited = false;
   private accessToken: string | null = null;
+
+  apiService = inject(ApiServiceService);
+  messageService = inject(NzMessageService);
 
   constructor() {}
 
@@ -117,21 +123,22 @@ export class CalendarService {
   /**
    * Create a Google Calendar Event
    */
-  public createGoogleEvent(eventDetails: any) {
+  public createGoogleEvent(eventDetails: EventDetails) {
     return new Promise<void>((resolve, reject) => {
       // Check if access token is available
-      this.accessToken = localStorage.getItem('gapi_access_token');
+      this.accessToken = localStorage.getItem('google_access_token');
 
       if (!this.accessToken) {
-        reject('User is not logged in or consent not granted.');
-        return;
+        this.loginWithGoogle();
+        // reject('User is not logged in or consent not granted.');
+        // return;
       }
 
       // Set the access token for gapi
       gapi.client.setToken({ access_token: this.accessToken });
 
       this.scheduleEvent(eventDetails)
-        .then(() => resolve())
+        .then((d) => resolve(d))
         .catch((error) => reject(error));
     });
   }
@@ -139,22 +146,20 @@ export class CalendarService {
   /**
    * Schedule a Google Calendar Event
    */
-  private scheduleEvent(eventDetails: any) {
-    return new Promise<void>((resolve, reject) => {
+  private scheduleEvent(eventDetails: EventDetails) {
+    return new Promise<any>((resolve, reject) => {
       const event = {
-        summary: eventDetails.summary || 'Event Title',
-        location: eventDetails.location || '800 Howard St., San Francisco, CA 94103',
-        description: eventDetails.description || 'A chance to hear more about Google\'s developer products.',
+        summary: eventDetails.summary,
+        description: eventDetails.description,
         start: {
           dateTime: eventDetails.startTime,
-          timeZone: 'America/Los_Angeles',
+          timeZone:'Asia/Kolkata'
         },
         end: {
           dateTime: eventDetails.endTime,
-          timeZone: 'America/Los_Angeles',
+          timeZone:'Asia/Kolkata'
         },
-        recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
-        attendees: [{ email: eventDetails.email }],
+        attendees: eventDetails.email,
         reminders: {
           useDefault: false,
           overrides: [
@@ -171,8 +176,21 @@ export class CalendarService {
 
       request.execute((event: any) => {
         if (event.htmlLink) {
-          console.log('Event created: ', event.htmlLink);
-          resolve();
+          this.apiService.postMeeting({
+            eventId:eventDetails.id,
+            name: eventDetails.summary,
+            email: eventDetails.email[0].email,
+            additionalInfo: eventDetails.description || '',
+            startTime: eventDetails.startDate,
+            endTime: eventDetails.endDate,
+            slot: eventDetails.slot,
+            attendees: eventDetails.email.map(d=> d.email),
+            meetLink: event.htmlLink,
+            googleEventId: event.id
+          }).subscribe(d=>{
+            this.messageService.success("Joined Event Successfully!")
+          })
+          resolve(event);
         } else {
           reject('Error creating event');
         }
