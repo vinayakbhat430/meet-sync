@@ -5,7 +5,7 @@
             <p>Meet sync helps to manage your time effectively. Create events, set your availability, and let others book time with you seamlessly</p>
             <div class="google-signin">
                 @if(isLoggedIn | async){
-                    <button nz-button nzType="primary"><span nz-icon nzType="dashboard" nzTheme="outline" class="icon"></span>Dashboard</button>
+                    <button nz-button nzType="primary" (click)="navigateToDashboard()"><span nz-icon nzType="dashboard" nzTheme="outline" class="icon"></span>Dashboard</button>
                 }
                 @else{
                     <app-login></app-login>

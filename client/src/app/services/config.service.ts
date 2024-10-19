@@ -34,12 +34,15 @@ export class ConfigService {
 
   constructor(private apiService: ApiServiceService) {
     this.apiService.currentUser().subscribe((d) => {
-      console.log(d)
-      this._user.next(d.user);
+      if(d){
+        this._user.next(d.user);
+      }
     });
 
     this.apiService.getAvailability().subscribe((avblty) => {
-      this._availability.next(avblty);
+      if(avblty){
+        this._availability.next(avblty);
+      }
     });
   }
 }

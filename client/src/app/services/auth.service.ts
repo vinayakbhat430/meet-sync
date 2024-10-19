@@ -2,15 +2,17 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiServiceService } from './api-service.service';
-
+import { CalendarService } from './calendar.service';
 
 declare var google: any;
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   router = inject(Router);
-  apiService = inject(ApiServiceService)
+  apiService = inject(ApiServiceService);
+  calendarService = inject(CalendarService);
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   // Observable for other components to subscribe to
@@ -43,30 +45,40 @@ export class AuthService {
     return JSON.parse(atob(token.split(".")[1]));
   }
 
-
-  signIn(response: any):void{
+  /**
+   * Sign in user and request access token for Google Calendar API
+   */
+  async signIn(response: any):Promise<void> {
     const credential = response.credential; // This is the ID token
     const decodedToken = this.decodeToken(credential);
-    sessionStorage.setItem("auth",JSON.stringify(decodedToken));
+    
+    // Save ID token in sessionStorage
+    sessionStorage.setItem("auth", JSON.stringify(decodedToken));
     sessionStorage.setItem("authToken", credential);
+
+    // Request OAuth access token for Google Calendar
+    try {
+      await this.calendarService.loginWithGoogle(); // This will request and store the OAuth access token
+    } catch (error) {
+      console.error('Error during Google OAuth login', error);
+    }
+
     this.loggedIn.next(true);
     this.apiService.currentUser().subscribe();
     this.router.navigate(["/dashboard"]);
-
   }
 
-
-  signout():void{
+  signout(): void {
     google.accounts.id.disableAutoSelect();
     sessionStorage.removeItem("auth");
     this.router.navigate(["/"]);
   }
 
-  hasToken():boolean{
-    return !!sessionStorage.getItem("auth")
+  hasToken(): boolean {
+    return !!sessionStorage.getItem("auth");
   }
 
-  getToken():string|null{
-    return sessionStorage.getItem("authToken")
+  getToken(): string | null {
+    return sessionStorage.getItem("authToken");
   }
 }

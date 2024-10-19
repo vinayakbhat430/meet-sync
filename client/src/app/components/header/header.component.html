@@ -5,7 +5,7 @@
     <nz-col nzSpan="12">
         <nz-row nzAlign="middle" nzJustify="end" [nzGutter]="16">
             <nz-col class="gutter-row">
-                <button nz-button nzType="primary" (click)="navigateToCreateEvent()"><span nz-icon nzType="form" nzTheme="outline"
+                <button nz-button nzType="primary" (click)="openCreateEvent()"><span nz-icon nzType="form" nzTheme="outline"
                         class="icon"></span>Create Event</button>
             </nz-col>
             <nz-col class="gutter-row">
@@ -14,3 +14,22 @@
         </nz-row>
     </nz-col>
 </nz-row>
+
+<nz-modal
+      [(nzVisible)]="isCreateEvent"
+      [nzTitle]="undefined"
+      [nzContent]="modalContent"
+      [nzFooter]="null"
+      [nzWidth]="'70vw'"
+      (nzOnCancel)="isCreateEvent = false"
+    >
+      <ng-template #modalContent>
+        @if(isLoggedIn()){
+            <app-create-event></app-create-event>
+        }
+        @else {
+            <div>Please Login to create Event</div>
+        }
+      </ng-template>
+
+    </nz-modal>

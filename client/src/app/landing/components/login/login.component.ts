@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
+import { CalendarService } from '../../../services/calendar.service';
 
 @Component({
   selector: 'app-login',

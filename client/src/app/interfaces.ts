@@ -32,13 +32,13 @@ export interface Events {
   duration: number;
   email: string;
   isPrivate: boolean;
-  bookings: Meeting[];
+  bookings: MeetingResponse[];
 }
 export interface EventsResponse extends Events{
     id:string
 }
 
-export interface Meeting {
+export interface Meeting{
   eventId?: string;
   userId: string;
   name: string;
@@ -46,9 +46,14 @@ export interface Meeting {
   additionalInfo: string;
   startTime: Date;
   endTime: Date;
+}
+
+
+export interface MeetingResponse extends Meeting {
   meetLink: string;
   googleEventId: string;
 }
+
 
 // Interface for TimeSlots
 export interface TimeSlots {
