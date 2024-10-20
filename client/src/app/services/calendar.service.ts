@@ -10,11 +10,9 @@ declare var google: any;
   providedIn: 'root',
 })
 export class CalendarService {
-  private CLIENT_ID =
-    '1066819936026-joc8gl1liv8n348g92i782cv9dphp87c.apps.googleusercontent.com';
+  private CLIENT_ID = '1066819936026-joc8gl1liv8n348g92i782cv9dphp87c.apps.googleusercontent.com';
   private API_KEY = 'AIzaSyCOT0ivPQRLrCpimfLSbluU-aAobsssGYE';
-  private DISCOVERY_DOC =
-    'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
+  private DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
   private SCOPES = 'https://www.googleapis.com/auth/calendar';
   private tokenClient: any;
   private gapiInited = false;
@@ -57,9 +55,9 @@ export class CalendarService {
           scope: this.SCOPES,
           callback: (tokenResponse: any) => {
             this.accessToken = tokenResponse.access_token;
-            console.log(this.accessToken);
+            console.log(this.accessToken)
             // Store token locally
-            if (this.accessToken) {
+            if(this.accessToken){
               localStorage.setItem('gapi_access_token', this.accessToken);
             }
           },
@@ -80,38 +78,38 @@ export class CalendarService {
     if (!this.gapiInited) {
       await this.initializeGapiClient(); // Ensure GAPI is initialized
     }
-
+  
     // Ensure GIS client is initialized before login
     if (!this.gisInited) {
       await this.initializeGisClient(); // Ensure GIS is initialized
     }
-
+  
     return new Promise<void>((resolve, reject) => {
       if (!this.tokenClient) {
         reject('Google OAuth client is not initialized');
         return;
       }
-
+  
       this.tokenClient.callback = async (response: any) => {
         if (response.error !== undefined) {
           reject(response);
           return;
         }
-        console.log('Response', response);
-
+        console.log("Response", response)
+  
         this.accessToken = response.access_token;
-        if (this.accessToken) {
+        if(this.accessToken){
           localStorage.setItem('google_access_token', this.accessToken); // Store token
         }
         resolve();
       };
-
+  
       // Check if gapi.client is defined before accessing getToken()
       if (!gapi.client || !gapi.client.getToken) {
         reject('GAPI client is not initialized');
         return;
       }
-
+  
       if (!gapi.client.getToken()) {
         this.tokenClient.requestAccessToken({ prompt: 'consent' });
       } else {
@@ -119,6 +117,8 @@ export class CalendarService {
       }
     });
   }
+  
+  
 
   /**
    * Create a Google Calendar Event
@@ -140,8 +140,8 @@ export class CalendarService {
       this.scheduleEvent(eventDetails)
         .then((d) => resolve(d))
         .catch((error) => {
-          this.messageService.error('Unable to create event at the moment!');
-          reject(error);
+          this.messageService.error("Unable to create event at the moment!");
+          reject(error)
         });
     });
   }
@@ -156,11 +156,11 @@ export class CalendarService {
         description: eventDetails.description,
         start: {
           dateTime: eventDetails.startTime,
-          timeZone: 'Asia/Kolkata',
+          timeZone:'Asia/Kolkata'
         },
         end: {
           dateTime: eventDetails.endTime,
-          timeZone: 'Asia/Kolkata',
+          timeZone:'Asia/Kolkata'
         },
         attendees: eventDetails.email,
         reminders: {
@@ -179,23 +179,21 @@ export class CalendarService {
 
       request.execute((event: any) => {
         if (event.htmlLink) {
-          eventDetails.email.forEach((email) => {
-            this.apiService
-              .postMeeting({
-                eventId: eventDetails.id,
-                name: eventDetails.summary,
-                email: email.email,
-                additionalInfo: eventDetails.description || '',
-                startTime: eventDetails.startDate,
-                endTime: eventDetails.endDate,
-                slot: eventDetails.slot,
-                attendees: eventDetails.email.map((d) => d.email),
-                meetLink: event.htmlLink,
-                googleEventId: event.id,
-              })
-              .subscribe();
-          });
-          this.messageService.success('Joined Event Successfully!');
+          eventDetails.email.forEach(email=>{
+          this.apiService.postMeeting({
+            eventId:eventDetails.id,
+            name: eventDetails.summary,
+            email: email.email,
+            additionalInfo: eventDetails.description || '',
+            startTime: eventDetails.startDate,
+            endTime: eventDetails.endDate,
+            slot: eventDetails.slot,
+            attendees: eventDetails.email.map(d=> d.email),
+            meetLink: event.htmlLink,
+            googleEventId: event.id
+          }).subscribe();
+        });
+        this.messageService.success("Joined Event Successfully!")
           resolve(event);
         } else {
           reject('Error creating event');
@@ -203,27 +201,5 @@ export class CalendarService {
       });
     });
   }
-
-  /**
-   * Delete a Google Calendar Event
-   */
-  private deleteEvent(googleEventId: string) {
-    return new Promise<void>((resolve, reject) => {
-      const request = gapi.client.calendar.events.delete({
-        calendarId: 'primary', // Use 'primary' for the main calendar or specify another calendar ID
-        eventId: googleEventId, // The Google Event ID to delete
-      });
-
-      request.execute((response: any) => {
-        if (response && !response.error) {
-          console.log('Event deleted successfully', response);
-          this.messageService.success('Event deleted successfully!');
-          resolve();
-        } else {
-          console.error('Error deleting event', response.error);
-          reject(response.error || 'Error deleting event');
-        }
-      });
-    });
-  }
+  
 }
