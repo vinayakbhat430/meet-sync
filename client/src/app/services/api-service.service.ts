@@ -48,4 +48,8 @@ export class ApiServiceService {
   postMeeting(data: Meeting){
     return this.http.post<Meeting>('/api/bookings',data)
   }
+
+  getBookedSlots(email:string,date:string){
+    return this.http.get<string[]>(`/api/booked-slots/${email}/${date}`);
+  }
 }

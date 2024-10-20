@@ -23,6 +23,11 @@ export class MeetingConfigService {
     this._availability.next(updatedAvailability);
   }
 
+  private _bookedSlots = new BehaviorSubject<string[]>([])
+  get bookedSlots(){
+    return this._bookedSlots.asObservable();
+  }
+
   constructor(private apiService: ApiServiceService) { }
 
   fetchAvailabilityByEmail(email?: string): void {
@@ -31,5 +36,11 @@ export class MeetingConfigService {
         this._availability.next(avblty);
       }
     });
+  }
+
+  getCurrentDayBookedSlots(email:string, date:string){
+    this.apiService.getBookedSlots(email,date).subscribe((slots)=>{
+      this._bookedSlots.next(slots);
+    })
   }
 }

@@ -13,6 +13,7 @@ import { CreateEventComponent } from "../create-event/create-event.component";
 })
 export class HeaderComponent implements OnInit {
   configService = inject(ConfigService);
+  router = inject(Router);
   pictureUrl :WritableSignal<string> = signal('');
 
   isCreateEvent = false;
@@ -28,6 +29,10 @@ export class HeaderComponent implements OnInit {
 
   openCreateEvent(){
     this.isCreateEvent =true ;
+  }
+
+  navigateToDashboard(){
+    this.router.navigate(["/dashboard"])
   }
 
 }

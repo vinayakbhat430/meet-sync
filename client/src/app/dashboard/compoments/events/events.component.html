@@ -9,8 +9,8 @@
                     <nz-col nzSpan="24" class="py-2">
                         {{event.description}}
                     </nz-col>
-                    <nz-col nzLg="12" nzSm="24" class="py-2">{{event.isPrivate ? 'Private':'Public'}}</nz-col>
-                    <nz-col nzLg="12" nzSm="24" class="py-2">{{event.bookings.length}} bookings</nz-col>
+                    <nz-col nzLg="12" nzSm="24" class="py-2 opacity">{{event.isPrivate ? 'Private':'Public'}}</nz-col>
+                    <nz-col nzLg="12" nzSm="24" class="py-2 opacity">{{event.bookings.length}} bookings</nz-col>
                     <nz-col nzLg="12" nzSm="24" class="py-2">
                         <button nz-button nzType="primary" nzDanger (click)="showDeleteConfirm(event.id)"><span nz-icon nzType="delete" nzTheme="outline"></span>Delete Event</button>
                     </nz-col>

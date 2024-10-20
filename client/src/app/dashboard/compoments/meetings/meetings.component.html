@@ -1,4 +1,4 @@
-<nz-row nzAlign="middle" nzJustify="start" nzGutter="32">
+<nz-row nzAlign="middle" nzJustify="start" [nzGutter]="[16,16]">
     @for(meeting of meetingList(); track $index){
         <nz-col nzLg="8" nzSm="24" class="gutter-row">
             <nz-card>
@@ -9,9 +9,19 @@
                     <nz-col nzSpan="24" class="py-2">
                         {{meeting.additionalInfo}}
                     </nz-col>
+                    <nz-col nzSpan="24" class="py-2 opacity">
+                        {{meeting.startTime|date: 'dd-MM-yyyy'}}
+                    </nz-col>
+                    <nz-col nzSpan="24" class="py-2 opacity">
+                        {{meeting.startTime|date: 'hh:mm a'}} - {{meeting.endTime|date: 'hh:mm a'}}
+                    </nz-col>
+                    <nz-col nzLg="12" nzSm="24" class="py-2">
+                        <button nz-button nzType="primary" (click)="joinMeeting(meeting.meetLink)"><span nz-icon nzType="link" nzTheme="outline"></span>Join Meeting</button>
+                    </nz-col>
                     <nz-col nzLg="12" nzSm="24" class="py-2">
                         <button nz-button nzType="primary" nzDanger (click)="showDeleteConfirm(meeting.id!)"><span nz-icon nzType="delete" nzTheme="outline"></span>Cancel meeting</button>
                     </nz-col>
+                    
                 </nz-row>
             </nz-card>
         </nz-col>

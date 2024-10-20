@@ -37,7 +37,10 @@ export class TimeSlotsComponent implements OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(JSON.stringify(changes['bookableSlots']?.currentValue) !== JSON.stringify(changes['bookableSlots']?.previousValue)){
+    if((
+      JSON.stringify(changes['bookableSlots']?.currentValue) !== JSON.stringify(changes['bookableSlots']?.previousValue)) ||
+      (JSON.stringify(changes['bookedSlots']?.currentValue) !== JSON.stringify(changes['bookedSlots']?.previousValue))
+  ){
       this.timeSlots.set(
         timeList
         .slice(
@@ -47,7 +50,7 @@ export class TimeSlotsComponent implements OnChanges {
         .map((time) => ({
           time: time,
           isSelected: false,
-          isBooked: false,
+          isBooked: this.bookedSlots()?.includes(time)|| false,
           canSelect: true,
         })))
     }

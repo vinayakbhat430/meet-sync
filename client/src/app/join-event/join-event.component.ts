@@ -2,7 +2,7 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { ActivatedRoute } from '@angular/router';
 import { DateTime, Info } from 'luxon';
-import { Subject, takeUntil } from 'rxjs';
+import { single, Subject, takeUntil } from 'rxjs';
 import {
   AvailabilityPostInterface,
   TimeSlots,
@@ -47,6 +47,8 @@ export class JoinEventComponent {
     endTime: '6:00 PM',
   };
 
+  bookedSlots:string[] = [];
+
   showNext: WritableSignal<boolean> = signal(false);
   selectedTimeSlots: WritableSignal<TimeSlots[]> = signal([]);
 
@@ -63,6 +65,13 @@ export class JoinEventComponent {
     this.getCurrentUser();
     this.getParamsAndFetchAvailability();
     this.getAvailability();
+    this.getBookedSlots();
+  }
+
+  getBookedSlots(){
+    this.configService.bookedSlots.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(slots=>{
+      this.bookedSlots= slots;
+    })
   }
 
   getAvailability() {
@@ -121,6 +130,8 @@ export class JoinEventComponent {
 
   selectedDay(day: DateTime) {
     this.activeDay.set(day);
+    this.configService.getCurrentDayBookedSlots(this.eventData()?.email!,this.activeDay()!.toISODate()||'')
+
     const selectedDay = this.availableSlots().find(
       (d) => d.day === day.weekdayLong
     );

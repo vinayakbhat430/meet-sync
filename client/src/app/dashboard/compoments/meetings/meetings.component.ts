@@ -50,4 +50,8 @@ export class MeetingsComponent implements OnInit {
       this.meetingList.set(this.meetingList().filter(event=> event.id !== eventId))
     });
   }
+
+  joinMeeting(meetingLink:string){
+    window.open(meetingLink,'_blank');
+  }
 }
