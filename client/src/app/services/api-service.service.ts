@@ -50,7 +50,7 @@ export class ApiServiceService {
   }
 
   patchMeeting(bookingId:string,data: Meeting){
-    return this.http.patch<Meeting>(`/api/booking/${bookingId}`,data)
+    return this.http.patch<Meeting>(`/api/booking-update/${bookingId}`,data)
   }
 
 

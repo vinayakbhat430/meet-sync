@@ -6,7 +6,7 @@ const router = express.Router();
 
 // PATCH route for updating a booking
 router.patch(
-  "/api/booking/:bookingId",
+  "/api/booking-update/:bookingId",
   async (req: Request, res: Response) => {
     const { bookingId } = req.params;
     const authorizationToken = req.headers.authorization;
