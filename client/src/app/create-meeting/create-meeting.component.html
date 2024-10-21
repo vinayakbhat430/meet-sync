@@ -1,7 +1,7 @@
 <nz-row nzAlign="top" nzJustify="center">
     <nz-col nzSpan="24">
         <nz-row nzAlign="middle" nzJustify="center">
-            <div class="py-4 title align-center">Create Meeting</div>
+            <div class="py-4 title align-center">Create new Meeting!</div>
         </nz-row>
     </nz-col>
     <nz-col nzLg="12" nzSm="24">
@@ -9,8 +9,30 @@
 
     </nz-col>
     <nz-col nzLg="12" nzSm="24" class="p-4">
+        <h3>Please select Time Slots: </h3>
         @if(activeDay()){
-        <app-time-slots [bookableSlots]="availableTimeForSelectedDay" (nextEvent)="slotsBooked($event)"></app-time-slots>
+        <app-time-slots [bookableSlots]="availableTimeForSelectedDay" [bookedSlots]="bookedSlots" (nextEvent)="slotsBooked($event)"
+            [maxSlots]="maxSlots()"></app-time-slots>
+        @if(showNext() && selectedTimeSlots().length){
+        <div class="py-6">
+            <form nz-form [formGroup]="meetingform">
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="title">Event Title</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Event Title is needed!">
+                        <input nz-input formControlName="title" id="title" />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="Description">Description</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your Description!">
+                        <textarea rows="4" nz-input id="description" formControlName="description"></textarea>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+            <button nz-button nzType="primary" nzShape="round" (click)="joinEvent()" [disabled]="meetingform.invalid"><span nz-icon
+                    nzType="usergroup-add" nzTheme="outline"></span>Create Meeting!</button>
+        </div>
+        }
         }
         @else {
         <div>Please select date to proceed!</div>

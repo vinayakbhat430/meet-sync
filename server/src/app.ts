@@ -17,6 +17,7 @@ import { GetEventByIdRouter } from './routes/get-event-byID';
 import { GetBookedSlots } from './routes/get-booked-slots';
 import { DeleteBookingsRouter } from './routes/delete-booking';
 import { GetDashboardRouter } from './routes/get-dashboard';
+import { PatchBookingRouter } from './routes/patch-booking';
 
 
 
@@ -44,6 +45,7 @@ app.use(PostBookingRouter);
 app.use(GetBookedSlots);
 app.use(DeleteBookingsRouter);
 app.use(GetDashboardRouter);
+app.use(PatchBookingRouter);
 
 
 

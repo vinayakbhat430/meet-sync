@@ -44,7 +44,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 // import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 // import { NzPopoverModule } from 'ng-zorro-antd/popover';
 // import { NzProgressModule } from 'ng-zorro-antd/progress';
-// import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 // import { NzRateModule } from 'ng-zorro-antd/rate';
 // import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -115,7 +115,7 @@ const NZZORRO_MODULES = [
   // NzPopconfirmModule,
   // NzPopoverModule,
   // NzProgressModule,
-  // NzRadioModule,
+  NzRadioModule,
   // NzRateModule,
   // NzResultModule,
   NzSelectModule,

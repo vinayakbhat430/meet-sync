@@ -49,6 +49,11 @@ export class ApiServiceService {
     return this.http.post<Meeting>('/api/bookings',data)
   }
 
+  patchMeeting(bookingId:string,data: Meeting){
+    return this.http.patch<Meeting>(`/api/booking/${bookingId}`,data)
+  }
+
+
   getBookedSlots(email:string,date:string){
     return this.http.get<string[]>(`/api/booked-slots/${email}/${date}`);
   }

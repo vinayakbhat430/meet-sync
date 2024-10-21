@@ -152,7 +152,7 @@ export class JoinEventComponent {
     this.showNext.set(false);
   }
 
-  joinEvent() {
+  async joinEvent() {
     const startTime = new Date(
       `${this.activeDay()?.toJSDate().toDateString()} ${convertTo24Hour(this.selectedTimeSlots()[0].time)}`
     );
@@ -182,7 +182,7 @@ export class JoinEventComponent {
       endDate:endTime,
       slot: this.selectedTimeSlots().map(t=> t.time)
     };
-    this.calendarService.createGoogleEvent(eventDetails).then(e=>{
+    await this.calendarService.createGoogleEvent(eventDetails).then(e=>{
       if(window.confirm("Please refresh to continue")){
         window.location.reload()
       }

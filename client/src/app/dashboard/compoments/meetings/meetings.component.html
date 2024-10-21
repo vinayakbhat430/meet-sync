@@ -1,11 +1,20 @@
+<nz-row nzAlign="middle" nzJustify="start">
+          <nz-radio-group [(ngModel)]="radioValue" nzButtonStyle="solid" (ngModelChange)="updateTheList()" class="py-4">
+            <label nz-radio-button nzValue="Upcoming">Upcoming</label>
+            <label nz-radio-button nzValue="Completed">Completed</label>
+          </nz-radio-group>
+</nz-row>
 <nz-row nzAlign="middle" nzJustify="start" [nzGutter]="[16,16]">
-    @for(meeting of meetingList(); track $index){
+    @for(meeting of listOfMeeting(); track $index){
         <nz-col nzLg="8" nzSm="24" class="gutter-row">
             <nz-card>
                 <nz-row nzAlign="middle" nzJustify="center">
-                    <nz-col nzSpan="24">
+                    <nz-col nzSpan="22">
                         <h3>{{meeting.name}}</h3>
                     </nz-col>
+                    @if(!meeting.eventId){
+                        <nz-col nzSpan="2"><span nz-icon nzType="edit" nzTheme="outline" (click)="editMeeting(meeting)"></span></nz-col>
+                    }
                     <nz-col nzSpan="24" class="py-2">
                         {{meeting.additionalInfo}}
                     </nz-col>
@@ -32,3 +41,27 @@
     <div>No Meetings found</div>
 }
 
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Edit meeting agenda" [nzFooter]="null" [nzWidth]="'75%'" (nzOnCancel)="isVisible = false">
+    <ng-container *nzModalContent>
+        <form nz-form [formGroup]="meetingform">
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="title">Event Title</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Event Title is needed!">
+                    <input nz-input formControlName="title" id="title" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="Description">Description</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your Description!">
+                    <textarea rows="4" nz-input id="description" formControlName="description"></textarea>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row nzAlign="middle" nzJustify="space-between">
+                <nz-form-control [nzSpan]="12" [nzOffset]="6">
+                    <button nz-button nzType="primary" (click)="updateEvent(selectedMeeting())" [disabled]="meetingform.invalid">Update Event</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </ng-container>
+  </nz-modal>

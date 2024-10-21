@@ -180,11 +180,11 @@ export class CalendarService {
 private saveEventToBackend(
   eventDetails: EventDetails,
   htmlLink: string,
-  googleEventId: string
+  googleEventId: string,
 ) {
   const postMeetingObservables = eventDetails.email.map((email) =>
     this.apiService.postMeeting({
-      eventId: eventDetails.id,
+      eventId: eventDetails.id || '',
       name: eventDetails.summary,
       email: email.email,
       additionalInfo: eventDetails.description || '',
@@ -214,9 +214,14 @@ private saveEventToBackend(
   public updateGoogleEvent(googleEventId: string, updatedEventDetails: EventDetails) {
     return new Promise<void>(async (resolve, reject) => {
       try {
+        if (!this.gapiInited) await this.initializeGapiClient();
+        if (!this.gisInited) await this.initializeGisClient();
         if (!sessionStorage.getItem('google_access_token')) {
           await this.loginWithGoogle();
         }
+
+        this.accessToken = sessionStorage.getItem('google_access_token');
+
 
         gapi.client.setToken({ access_token: this.accessToken });
         
@@ -225,11 +230,11 @@ private saveEventToBackend(
           description: updatedEventDetails.description,
           start: {
             dateTime: updatedEventDetails.startTime,
-            timeZone: 'America/Los_Angeles',
+            timeZone: 'Asia/Kolkata',
           },
           end: {
             dateTime: updatedEventDetails.endTime,
-            timeZone: 'America/Los_Angeles',
+            timeZone: 'Asia/Kolkata',
           },
           attendees: updatedEventDetails.email,
           reminders: {
@@ -247,9 +252,11 @@ private saveEventToBackend(
           resource: event,
           sendNotifications: true,
         });
+        console.log("Executing Event")
 
         request.execute((event: any) => {
           if (event.htmlLink) {
+            this.savePatchToBackend(updatedEventDetails,event.htmlLink,event.id)
             this.messageService.success('Event updated successfully!');
             resolve();
           } else {
@@ -257,10 +264,44 @@ private saveEventToBackend(
           }
         });
       } catch (error) {
+        console.log(error)
         reject('Failed to update event');
       }
     });
   }
+
+  /**
+ * Save event to backend
+ */
+private savePatchToBackend(
+  eventDetails: EventDetails,
+  htmlLink: string,
+  googleEventId: string,
+) {
+  const postMeetingObservables = eventDetails.email.map((email) =>
+    this.apiService.patchMeeting(eventDetails.id || '',{
+      eventId: eventDetails.id || '',
+      name: eventDetails.summary,
+      email: email.email,
+      additionalInfo: eventDetails.description || '',
+      startTime: eventDetails.startDate,
+      endTime: eventDetails.endDate,
+      slot: eventDetails.slot,
+      attendees: eventDetails.email.map((d) => d.email),
+      meetLink: htmlLink,
+      googleEventId: googleEventId,
+    })
+  );
+
+  // Wait for all postMeeting API calls to complete using forkJoin
+  forkJoin(postMeetingObservables).subscribe({
+    next: (responses) => {
+    },
+    error: (error) => {
+      console.error('Failed to save some meetings:', error);
+    }
+  });
+}
 
   /**
    * Delete a Google Calendar Event
@@ -287,7 +328,7 @@ private saveEventToBackend(
           if (!response || response.error) {
             reject('Error deleting event');
           } else {
-            this.messageService.success('Meeting cancelled successfully');
+            this.messageService.info('Meeting cancelled successfully');
             resolve();
           }
         });

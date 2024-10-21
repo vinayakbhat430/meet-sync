@@ -20,7 +20,12 @@ export class FeaturesComponent {
     {
       icon:'link',
       title:'Custom Links',
-      description:'Share your personalized scheduling link.'
+      description:'Share your personalized scheduling link to prople.'
+    },
+    {
+      icon:'vertical-align-middle',
+      title: 'No Conflicts',
+      description:'Avoid conflicts by letting others know timeslot is already booked!.'
     }
   ])
 }

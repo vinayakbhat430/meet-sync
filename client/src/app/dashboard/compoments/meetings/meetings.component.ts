@@ -1,17 +1,21 @@
 import {
   Component,
+  computed,
   inject,
   OnInit,
+  Signal,
   signal,
   WritableSignal,
 } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Subject } from 'rxjs';
-import { Meeting } from '../../../interfaces';
+import { EventDetails, Meeting } from '../../../interfaces';
 import { ApiServiceService } from '../../../services/api-service.service';
 import { Location } from '@angular/common';
 import { CalendarService } from '../../../services/calendar.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { formatDateToGoogleDateTime } from '../../../shared/time-slots.util';
 
 @Component({
   selector: 'app-meetings',
@@ -29,6 +33,29 @@ export class MeetingsComponent implements OnInit {
   private readonly ngUnsubscribe$ = new Subject<void>();
 
   meetingList: WritableSignal<Meeting[]> = signal([]);
+
+  listOfMeeting: Signal<Meeting[]> = computed(() => {
+    const filterFn =
+      this.radioSignal() === 'Upcoming'
+        ? (m: Meeting) => new Date(m.startTime).getTime() >= new Date().getTime()
+        : (m: Meeting) => new Date(m.startTime).getTime() < new Date().getTime();
+    return this.meetingList().filter(filterFn);
+  });
+
+  selectedMeeting: WritableSignal<Meeting|undefined> = signal(undefined)
+
+  radioValue: 'Upcoming' | 'Completed' = 'Upcoming';
+  radioSignal: WritableSignal<'Upcoming' | 'Completed'> = signal('Upcoming');
+
+  isVisible=false;
+
+  meetingform:FormGroup;
+  constructor(private fb:FormBuilder){
+    this.meetingform = this.fb.group({
+      title:['', Validators.required],
+      description:['', Validators.required]
+    })
+  }
 
   ngOnInit(): void {
     this.apiService.getMeetings().subscribe((d) => {
@@ -54,7 +81,6 @@ export class MeetingsComponent implements OnInit {
       .deleteEvent(googleEventId)
       .then((e) => {
         this.apiService.deleteBooking(eventId).subscribe((res) => {
-          this.messageService.error('Deleted Event successfully!');
           this.meetingList.set(
             this.meetingList().filter((event) => event.id !== eventId)
           );
@@ -68,4 +94,48 @@ export class MeetingsComponent implements OnInit {
   joinMeeting(meetingLink: string) {
     window.open(meetingLink, '_blank');
   }
+
+  updateTheList() {
+    this.radioSignal.set(this.radioValue);
+  }
+  editMeeting(meeting:Meeting){
+    this.isVisible=true
+    this.selectedMeeting.set(meeting)
+  }
+
+  async updateEvent(meeting:Meeting| undefined){
+    console.log(meeting)
+    if(!meeting){
+      this.messageService.error("Unable to update meeting at the moment!")
+    }
+    else{
+      
+      const formData = this.meetingform.getRawValue() as MeetingModal;
+      
+      const eventDetails: EventDetails = {
+        summary: formData.title,
+        description: formData.description,
+        startTime: formatDateToGoogleDateTime(new Date(meeting.startTime)),
+        endTime: formatDateToGoogleDateTime(new Date(meeting.endTime)),
+        email: meeting.attendees.map(a => ({email: a})),
+        startDate:new Date(meeting.startTime),
+        endDate: new Date(meeting.endTime),
+        slot: meeting.slot,
+        id:meeting.id
+      };
+      console.log("Calling update event service!");
+      await this.calendarService.updateGoogleEvent(meeting.googleEventId,eventDetails).then(e=>{
+        if(window.confirm("Please refresh to continue")){
+          window.location.reload()
+        }
+      }).catch(e=>{
+        
+      });
+    }
+  }
+}
+
+interface MeetingModal {
+  title:string;
+  description:string;
 }

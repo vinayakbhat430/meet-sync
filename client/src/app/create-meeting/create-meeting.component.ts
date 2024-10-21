@@ -2,32 +2,45 @@ import {
   Component,
   inject,
   OnInit,
+  Signal,
   signal,
   WritableSignal,
 } from '@angular/core';
 import { DateTime, Info } from 'luxon';
 import {  Subject,  takeUntil } from 'rxjs';
-import { AvailabilityPostInterface, EventsResponse, TimeSlots } from '../interfaces';
+import { AvailabilityPostInterface, EventDetails, EventsResponse, TimeSlots, User } from '../interfaces';
 import { ApiServiceService } from '../services/api-service.service';
 import { SharedModule } from "../shared/shared.module";
 import { ActivatedRoute } from '@angular/router';
 import { MeetingConfigService } from '../services/meeting-config.service';
+import { CalendarService } from '../services/calendar.service';
+import { ConfigService } from '../services/config.service';
+import { convertTo24Hour, formatDateToGoogleDateTime } from '../shared/time-slots.util';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+
+const THIRTY_MINUTES_IN_MS = 30 * 60 * 1000
+
 
 @Component({
   selector: 'app-create-meeting',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, ReactiveFormsModule,FormsModule],
   templateUrl: './create-meeting.component.html',
   styleUrl: './create-meeting.component.less',
 })
 export class CreateMeetingComponent implements OnInit {
   configService = inject(MeetingConfigService);
+  commonConfigService = inject(ConfigService);
 
   apiService = inject(ApiServiceService);
+
+  calendarService = inject(CalendarService);
 
   route = inject(ActivatedRoute);
 
   activeDay: WritableSignal<DateTime | null> = signal(null);
+  user: WritableSignal<User> = signal({ id: '', email: '', picture: '' });
 
   availability: WritableSignal<string[]> = signal([]);
   availableSlots: WritableSignal<AvailabilityPostInterface[]> = signal([]);
@@ -37,18 +50,41 @@ export class CreateMeetingComponent implements OnInit {
     endTime: '6:00 PM',
   };
 
+  bookedSlots:string[] = [];
+
   showNext: WritableSignal<boolean> = signal(false);
   selectedTimeSlots: WritableSignal<TimeSlots[]> = signal([]);
 
-  maxSlots:WritableSignal<number> =signal(100);
-  eventData: WritableSignal<EventsResponse|undefined> = signal(undefined);
+  maxSlots: Signal<number> = signal(100);
 
   private readonly ngUnsubscribe$ = new Subject<void>();
   eventId: any;
   emailId: any;
 
+  meetingform:FormGroup;
+  constructor(private fb:FormBuilder){
+    this.meetingform = this.fb.group({
+      title:['', Validators.required],
+      description:['', Validators.required]
+    })
+  }
+
   ngOnInit(): void {
-    this.getParamsAndFetchAvailability()
+    this.calendarService.initializeGapiClient();
+    this.calendarService.initializeGisClient();
+    this.getCurrentUser();
+    this.getParamsAndFetchAvailability();
+    this.getAvailability();
+    this.getBookedSlots();
+  }
+
+  getBookedSlots(){
+    this.configService.bookedSlots.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(slots=>{
+      this.bookedSlots= slots;
+    })
+  }
+
+  getAvailability() {
     this.configService.availability
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((d) => {
@@ -69,26 +105,32 @@ export class CreateMeetingComponent implements OnInit {
       });
   }
 
-  getParamsAndFetchAvailability(){
-    this.route.params.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((params) => {
-      this.eventId = params['eventId']; // Fetch eventId from route params
-      this.emailId = params['emailId']; // Fetch emailId from route params
-
-      // Use emailId to fetch availability if available
-      this.configService.fetchAvailabilityByEmail(this.emailId);
-      this.getEventById(this.eventId)
-    });
+  getCurrentUser() {
+    this.commonConfigService.user
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((user) => {
+        if (user) {
+          this.user.set(user);
+        }
+      });
   }
 
-  getEventById(eventId:string) {
-    this.apiService.getEventsById(eventId).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(event=>{
-      this.eventData.set(event)
-      this.maxSlots.set(event.duration/30);
-    })
+  getParamsAndFetchAvailability() {
+    this.route.params
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((params) => {
+        this.emailId = params['emailId'];
+
+        // Use emailId to fetch availability if available
+        this.configService.fetchAvailabilityByEmail(this.emailId);
+      });
   }
+
 
   selectedDay(day: DateTime) {
     this.activeDay.set(day);
+    this.configService.getCurrentDayBookedSlots(this.emailId,this.activeDay()!.toJSDate().toISOString()||'')
+
     const selectedDay = this.availableSlots().find(
       (d) => d.day === day.weekdayLong
     );
@@ -108,4 +150,45 @@ export class CreateMeetingComponent implements OnInit {
   goToPrevious() {
     this.showNext.set(false);
   }
+
+  joinEvent() {
+    const formData = this.meetingform.getRawValue() as MeetingModal;
+    
+    const startTime = new Date(
+      `${this.activeDay()?.toJSDate().toDateString()} ${convertTo24Hour(this.selectedTimeSlots()[0].time)}`
+    );
+    const endTime = new Date(
+      `${this.activeDay()?.toJSDate().toDateString()} ${
+        convertTo24Hour(this.selectedTimeSlots()[this.selectedTimeSlots().length - 1].time)
+      }`
+    );
+
+    endTime.setTime(endTime.getTime() + THIRTY_MINUTES_IN_MS)
+    const emails = [];
+    emails.push({ email: this.emailId });
+    if(this.user()?.email){
+      emails.push({email:this.user().email!});
+    }    const eventDetails: EventDetails = {
+      summary: formData.title,
+      description: formData.description,
+      startTime: formatDateToGoogleDateTime(startTime),
+      endTime: formatDateToGoogleDateTime( endTime),
+      email: emails,
+      startDate:startTime,
+      endDate:endTime,
+      slot: this.selectedTimeSlots().map(t=> t.time)
+    };
+    this.calendarService.createGoogleEvent(eventDetails).then(e=>{
+      if(window.confirm("Please refresh to continue")){
+        window.location.reload()
+      }
+    }).catch(e=>{
+
+    });
+  }
+}
+
+interface MeetingModal {
+  title:string;
+  description:string;
 }

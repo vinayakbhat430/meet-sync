@@ -2,9 +2,9 @@
     <nz-row nzAlign="middle" nzJustify="center">
         <h1>Key Features</h1>
     </nz-row>
-    <nz-row nzAlign="middle" nzJustify="space-evenly">
+    <nz-row nzAlign="middle" nzJustify="space-evenly" [nzGutter]="[16,16]">
         @for(feature of features(); track $index){
-            <nz-col nzXs="18" nzLg="6">
+            <nz-col nzXs="18" nzLg="8" class="gutter-row">
                 <nz-card [nzBodyStyle]="{'min-height': '10rem'}" class="my-4 card">
                     <nz-row nzAlign="middle" nzJustify="center">
                         <nz-col nzSpan="24" class="flex align-center justify-center">

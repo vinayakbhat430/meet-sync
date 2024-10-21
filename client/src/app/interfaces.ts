@@ -67,7 +67,7 @@ export interface EventDetails {
   startTime: string; // Event start time in ISO format (e.g., '2024-10-21T10:00:00Z')
   endTime: string; // Event end time in ISO format (e.g., '2024-10-21T11:00:00Z')
   email: { email: string }[]; // List of attendee email addresses
-  id: string;
+  id?: string;
   startDate: Date;
   endDate: Date;
   slot: string[];
