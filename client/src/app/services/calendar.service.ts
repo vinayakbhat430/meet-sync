@@ -74,13 +74,27 @@ export class CalendarService {
     });
   }
 
+  async ensureClients() {
+    if (!this.gapiInited) await this.initializeGapiClient();
+    if (!this.gisInited) await this.initializeGisClient();
+  }
+  async setup() {
+    await this.ensureClients();
+    if (!sessionStorage.getItem('google_access_token')) {
+      await this.loginWithGoogle();
+    }
+
+    this.accessToken = sessionStorage.getItem('google_access_token');
+
+    gapi.client.setToken({ access_token: this.accessToken });
+  }
+
   /**
    * Perform login and request consent once
    */
   public async loginWithGoogle() {
     try {
-      if (!this.gapiInited) await this.initializeGapiClient();
-      if (!this.gisInited) await this.initializeGisClient();
+      await this.ensureClients();
 
       return new Promise<void>((resolve, reject) => {
         this.tokenClient.callback = (response: any) => {
@@ -164,9 +178,9 @@ export class CalendarService {
 
       request.execute((event: any) => {
         if (event.htmlLink) {
-          this.saveEventToBackend(eventDetails, event.htmlLink, event.id)
-              this.messageService.success('Event created successfully!');
-              resolve(event);
+          this.saveEventToBackend(eventDetails, event.htmlLink, event.id);
+          this.messageService.success('Event created successfully!');
+          resolve(event);
         } else {
           reject('Error creating event');
         }
@@ -174,57 +188,49 @@ export class CalendarService {
     });
   }
 
-/**
- * Save event to backend
- */
-private saveEventToBackend(
-  eventDetails: EventDetails,
-  htmlLink: string,
-  googleEventId: string,
-) {
-  const postMeetingObservables = eventDetails.email.map((email) =>
-    this.apiService.postMeeting({
-      eventId: eventDetails.id || '',
-      name: eventDetails.summary,
-      email: email.email,
-      additionalInfo: eventDetails.description || '',
-      startTime: eventDetails.startDate,
-      endTime: eventDetails.endDate,
-      slot: eventDetails.slot,
-      attendees: eventDetails.email.map((d) => d.email),
-      meetLink: htmlLink,
-      googleEventId: googleEventId,
-    })
-  );
+  /**
+   * Save event to backend
+   */
+  private saveEventToBackend(
+    eventDetails: EventDetails,
+    htmlLink: string,
+    googleEventId: string
+  ) {
+    const postMeetingObservables = eventDetails.email.map((email) =>
+      this.apiService.postMeeting({
+        eventId: eventDetails.id || '',
+        name: eventDetails.summary,
+        email: email.email,
+        additionalInfo: eventDetails.description || '',
+        startTime: eventDetails.startDate,
+        endTime: eventDetails.endDate,
+        slot: eventDetails.slot,
+        attendees: eventDetails.email.map((d) => d.email),
+        meetLink: htmlLink,
+        googleEventId: googleEventId,
+      })
+    );
 
-  // Wait for all postMeeting API calls to complete using forkJoin
-  forkJoin(postMeetingObservables).subscribe({
-    next: (responses) => {
-    },
-    error: (error) => {
-      console.error('Failed to save some meetings:', error);
-    }
-  });
-}
-
+    // Wait for all postMeeting API calls to complete using forkJoin
+    forkJoin(postMeetingObservables).subscribe({
+      next: (responses) => {},
+      error: (error) => {
+        console.error('Failed to save some meetings:', error);
+      },
+    });
+  }
 
   /**
    * Update a Google Calendar Event
    */
-  public updateGoogleEvent(googleEventId: string, updatedEventDetails: EventDetails) {
+  public updateGoogleEvent(
+    googleEventId: string,
+    updatedEventDetails: EventDetails
+  ) {
     return new Promise<void>(async (resolve, reject) => {
       try {
-        if (!this.gapiInited) await this.initializeGapiClient();
-        if (!this.gisInited) await this.initializeGisClient();
-        if (!sessionStorage.getItem('google_access_token')) {
-          await this.loginWithGoogle();
-        }
+        await this.setup();
 
-        this.accessToken = sessionStorage.getItem('google_access_token');
-
-
-        gapi.client.setToken({ access_token: this.accessToken });
-        
         const event = {
           summary: updatedEventDetails.summary,
           description: updatedEventDetails.description,
@@ -252,11 +258,15 @@ private saveEventToBackend(
           resource: event,
           sendNotifications: true,
         });
-        console.log("Executing Event")
+        console.log('Executing Event');
 
         request.execute((event: any) => {
           if (event.htmlLink) {
-            this.savePatchToBackend(updatedEventDetails,event.htmlLink,event.id)
+            this.savePatchToBackend(
+              updatedEventDetails,
+              event.htmlLink,
+              event.id
+            );
             this.messageService.success('Event updated successfully!');
             resolve();
           } else {
@@ -264,66 +274,58 @@ private saveEventToBackend(
           }
         });
       } catch (error) {
-        console.log(error)
+        console.log(error);
         reject('Failed to update event');
       }
     });
   }
 
   /**
- * Save event to backend
- */
-private savePatchToBackend(
-  eventDetails: EventDetails,
-  htmlLink: string,
-  googleEventId: string,
-) {
-  const postMeetingObservables = eventDetails.email.map((email) =>
-    this.apiService.patchMeeting(eventDetails.id || '',{
-      eventId: eventDetails.id || '',
-      name: eventDetails.summary,
-      email: email.email,
-      additionalInfo: eventDetails.description || '',
-      startTime: eventDetails.startDate,
-      endTime: eventDetails.endDate,
-      slot: eventDetails.slot,
-      attendees: eventDetails.email.map((d) => d.email),
-      meetLink: htmlLink,
-      googleEventId: googleEventId,
-    })
-  );
+   * Save event to backend
+   */
+  private savePatchToBackend(
+    eventDetails: EventDetails,
+    htmlLink: string,
+    googleEventId: string
+  ) {
+    const postMeetingObservables = eventDetails.email.map((email) =>
+      this.apiService.patchMeeting(eventDetails.id || '', {
+        eventId: eventDetails.id || '',
+        name: eventDetails.summary,
+        email: email.email,
+        additionalInfo: eventDetails.description || '',
+        startTime: eventDetails.startDate,
+        endTime: eventDetails.endDate,
+        slot: eventDetails.slot,
+        attendees: eventDetails.email.map((d) => d.email),
+        meetLink: htmlLink,
+        googleEventId: googleEventId,
+      })
+    );
 
-  // Wait for all postMeeting API calls to complete using forkJoin
-  forkJoin(postMeetingObservables).subscribe({
-    next: (responses) => {
-    },
-    error: (error) => {
-      console.error('Failed to save some meetings:', error);
-    }
-  });
-}
+    // Wait for all postMeeting API calls to complete using forkJoin
+    forkJoin(postMeetingObservables).subscribe({
+      next: (responses) => {},
+      error: (error) => {
+        console.error('Failed to save some meetings:', error);
+      },
+    });
+  }
 
   /**
    * Delete a Google Calendar Event
    */
   public deleteEvent(googleEventId: string) {
     return new Promise<void>(async (resolve, reject) => {
-      try{
-        if (!this.gapiInited) await this.initializeGapiClient();
-        if (!this.gisInited) await this.initializeGisClient();
-        if (!sessionStorage.getItem('google_access_token')) {
-          await this.loginWithGoogle();
-        }
-        this.accessToken = sessionStorage.getItem('google_access_token');
-
-        gapi.client.setToken({ access_token: this.accessToken });
+      try {
+        await this.setup();
 
         const request = gapi.client.calendar.events.delete({
           calendarId: 'primary',
           eventId: googleEventId,
           sendNotifications: true,
         });
-  
+
         request.execute((response: any) => {
           if (!response || response.error) {
             reject('Error deleting event');
@@ -332,7 +334,7 @@ private savePatchToBackend(
             resolve();
           }
         });
-      }catch (error) {
+      } catch (error) {
         this.messageService.error('Meeting cancel failed');
         reject('Failed to delete event');
       }
