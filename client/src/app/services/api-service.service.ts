@@ -52,4 +52,8 @@ export class ApiServiceService {
   getBookedSlots(email:string,date:string){
     return this.http.get<string[]>(`/api/booked-slots/${email}/${date}`);
   }
+
+  deleteBooking(eventId:string){
+    return this.http.delete(`/api/bookings/${eventId}`);
+  }
 }

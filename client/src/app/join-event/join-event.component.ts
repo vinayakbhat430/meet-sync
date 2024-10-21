@@ -1,6 +1,6 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, withDebugTracing } from '@angular/router';
 import { DateTime, Info } from 'luxon';
 import { single, Subject, takeUntil } from 'rxjs';
 import {
@@ -14,7 +14,7 @@ import { ApiServiceService } from '../services/api-service.service';
 import { MeetingConfigService } from '../services/meeting-config.service';
 import { CalendarService } from '../services/calendar.service';
 import { ConfigService } from '../services/config.service';
-import { formatDateToGoogleDateTime } from '../shared/time-slots.util';
+import { convertTo24Hour, formatDateToGoogleDateTime } from '../shared/time-slots.util';
 
 const THIRTY_MINUTES_IN_MS = 30 * 60 * 1000
 
@@ -130,7 +130,7 @@ export class JoinEventComponent {
 
   selectedDay(day: DateTime) {
     this.activeDay.set(day);
-    this.configService.getCurrentDayBookedSlots(this.eventData()?.email!,this.activeDay()!.toISODate()||'')
+    this.configService.getCurrentDayBookedSlots(this.eventData()?.email!,this.activeDay()!.toJSDate().toISOString()||'')
 
     const selectedDay = this.availableSlots().find(
       (d) => d.day === day.weekdayLong
@@ -154,11 +154,11 @@ export class JoinEventComponent {
 
   joinEvent() {
     const startTime = new Date(
-      `${this.activeDay()?.toISODate()} ${this.selectedTimeSlots()[0].time}`
+      `${this.activeDay()?.toJSDate().toDateString()} ${convertTo24Hour(this.selectedTimeSlots()[0].time)}`
     );
     const endTime = new Date(
-      `${this.activeDay()?.toISODate()} ${
-        this.selectedTimeSlots()[this.selectedTimeSlots().length - 1].time
+      `${this.activeDay()?.toJSDate().toDateString()} ${
+        convertTo24Hour(this.selectedTimeSlots()[this.selectedTimeSlots().length - 1].time)
       }`
     );
     if(this.selectedTimeSlots().length === 1){
@@ -170,8 +170,7 @@ export class JoinEventComponent {
     }
     if(this.user()?.email){
       emails.push({email:this.user().email!});
-    }
-    const eventDetails: EventDetails = {
+    }    const eventDetails: EventDetails = {
       eventId:this.eventData()?.id,
       summary: this.eventData()?.title || '',
       description: this.eventData()?.description || '',
@@ -183,7 +182,13 @@ export class JoinEventComponent {
       endDate:endTime,
       slot: this.selectedTimeSlots().map(t=> t.time)
     };
-    this.calendarService.createGoogleEvent(eventDetails);
+    this.calendarService.createGoogleEvent(eventDetails).then(e=>{
+      if(window.confirm("Please refresh to continue")){
+        window.location.reload()
+      }
+    }).catch(e=>{
+
+    });
   }
 }
 
