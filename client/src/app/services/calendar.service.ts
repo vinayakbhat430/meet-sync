@@ -63,7 +63,7 @@ export class CalendarService {
               return;
             }
             this.accessToken = tokenResponse.access_token;
-            localStorage.setItem('gapi_access_token', this.accessToken || '');
+            sessionStorage.setItem('gapi_access_token', this.accessToken || '');
           },
         });
         this.gisInited = true;
@@ -89,7 +89,7 @@ export class CalendarService {
             return;
           }
           this.accessToken = response.access_token;
-          localStorage.setItem('google_access_token', this.accessToken || '');
+          sessionStorage.setItem('google_access_token', this.accessToken || '');
           resolve();
         };
 
@@ -111,11 +111,11 @@ export class CalendarService {
   public createGoogleEvent(eventDetails: EventDetails) {
     return new Promise<void>(async (resolve, reject) => {
       try {
-        if (!localStorage.getItem('google_access_token')) {
+        if (!sessionStorage.getItem('google_access_token')) {
           await this.loginWithGoogle();
         }
 
-        this.accessToken = localStorage.getItem('google_access_token');
+        this.accessToken = sessionStorage.getItem('google_access_token');
 
         gapi.client.setToken({ access_token: this.accessToken });
         this.scheduleEvent(eventDetails)
@@ -214,14 +214,12 @@ private saveEventToBackend(
   public updateGoogleEvent(googleEventId: string, updatedEventDetails: EventDetails) {
     return new Promise<void>(async (resolve, reject) => {
       try {
-        if (!localStorage.getItem('google_access_token')) {
+        if (!sessionStorage.getItem('google_access_token')) {
           await this.loginWithGoogle();
         }
 
         gapi.client.setToken({ access_token: this.accessToken });
         
-        console.log(updatedEventDetails);
-
         const event = {
           summary: updatedEventDetails.summary,
           description: updatedEventDetails.description,
@@ -272,10 +270,10 @@ private saveEventToBackend(
       try{
         if (!this.gapiInited) await this.initializeGapiClient();
         if (!this.gisInited) await this.initializeGisClient();
-        if (!localStorage.getItem('google_access_token')) {
+        if (!sessionStorage.getItem('google_access_token')) {
           await this.loginWithGoogle();
         }
-        this.accessToken = localStorage.getItem('google_access_token');
+        this.accessToken = sessionStorage.getItem('google_access_token');
 
         gapi.client.setToken({ access_token: this.accessToken });
 
@@ -286,7 +284,6 @@ private saveEventToBackend(
         });
   
         request.execute((response: any) => {
-          console.log(response)
           if (!response || response.error) {
             reject('Error deleting event');
           } else {
@@ -295,7 +292,6 @@ private saveEventToBackend(
           }
         });
       }catch (error) {
-        console.log(error);
         this.messageService.error('Meeting cancel failed');
         reject('Failed to delete event');
       }

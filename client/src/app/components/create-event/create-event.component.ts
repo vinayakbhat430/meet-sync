@@ -53,7 +53,6 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
   createEvent(){
     const formData = this.eventForm.getRawValue() as EventModel
-    console.log(this.currentUserEmail())
     const postPayload:Events = {...formData , duration: formData.duration * 30, bookings:[],email:this.currentUserEmail()}
     this.apiService.postEvents(postPayload).subscribe(d =>{
       this.messageService.success('Created Event Successfully');
