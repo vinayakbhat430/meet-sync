@@ -31,7 +31,7 @@
                     'calendar-grid-cell':true, 
                     'calendar-grid-cell-active': activeDay()?.toISODate() === dayOfMonth.toISODate(), 
                     'unavailable-days': availability().includes(dayOfMonth.weekdayLong||''),
-                    'calendar-grid-cell-inactive':dayOfMonth.month !== firstDayOfActiveMonth().month
+                    'calendar-grid-cell-inactive':(dayOfMonth.month !== firstDayOfActiveMonth().month) || dayOfMonth.toJSDate().getTime() < today().toJSDate().getTime()
                     }">
                 {{dayOfMonth.day}}
             </div>
