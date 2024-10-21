@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Availability, AvailabilityModel, AvailabilityPostInterface, Events, EventsResponse, Meeting, UserResponse } from '../interfaces';
+import { Availability, AvailabilityModel, AvailabilityPostInterface, Dashboard, Events, EventsResponse, Meeting, UserResponse } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -55,5 +55,9 @@ export class ApiServiceService {
 
   deleteBooking(eventId:string){
     return this.http.delete(`/api/bookings/${eventId}`);
+  }
+
+  getDashboard(){
+    return this.http.get<Dashboard>('/api/dashboard');
   }
 }

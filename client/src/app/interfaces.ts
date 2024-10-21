@@ -72,3 +72,11 @@ export interface EventDetails {
   endDate: Date;
   slot: string[];
 }
+
+export interface Dashboard {
+  name: string;
+  email: string;
+  picture: string;
+  bookings: number;
+  events: number;
+}

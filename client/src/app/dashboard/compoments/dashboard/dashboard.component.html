@@ -1,1 +1,39 @@
-<p>dashboard works!</p>
+@if(dashboard()){
+    <nz-row>
+        <nz-col nzSpan="24">
+            <div class="cards">
+                <nz-card>
+                    Total Meetings<br/>
+                    <span class="number">
+                        {{dashboard()?.bookings}}
+                    </span>
+                </nz-card>
+                <nz-card>
+                    Total events<br/>
+                    <span class="number">
+                        {{dashboard()?.events}}
+                    </span>
+                </nz-card>
+            </div>
+        </nz-col>
+        <nz-col nzSpan="24">
+            <nz-row class="p-8">
+                <nz-col nzSpan="4">
+                    <nz-avatar nzSize="large" class="gutter-row" [nzSrc]="dashboard()?.picture"></nz-avatar>
+                </nz-col>
+                <nz-col nzSpan="20">
+                    <h2>{{dashboard()?.email}}</h2>
+                </nz-col>
+            </nz-row>
+        </nz-col>
+        <nz-col nzSpan="24" class="p-8">
+            Copy Below Link to share with people to book meeting with you:
+            <br/>
+            <br/>
+            <h3>{{connectLink()}}<span nz-icon nzType="copy" nzTheme="outline" (click)="copyLink()"></span></h3>
+        </nz-col>
+    </nz-row>
+}
+@else {
+    <div>Youre Not Logged in!</div>
+}
