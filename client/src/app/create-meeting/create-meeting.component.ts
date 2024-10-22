@@ -151,9 +151,13 @@ export class CreateMeetingComponent implements OnInit {
     this.showNext.set(false);
   }
 
+  /**
+   * here dates are in UTC format, we need to convert them to ISO date or date as per local timezone.
+   * else wrong timezone will be shown
+   */
   joinEvent() {
     const formData = this.meetingform.getRawValue() as MeetingModal;
-    
+
     const startTime = new Date(
       `${this.activeDay()?.toJSDate().toDateString()} ${convertTo24Hour(this.selectedTimeSlots()[0].time)}`
     );
