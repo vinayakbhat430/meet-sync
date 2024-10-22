@@ -3,7 +3,37 @@
 
 A scheduling app to schedule the meeting without conflicts or overlap of the meeting.
 
+## Technologies Used
 
+- Angular (v18)
+- Ant Design (NZ ZORRO Components)
+- MongoDb
+- Mongoose
+- Typescript
+- NodeJS
+- Express
+- Docker
+- Kubernetes
+- Skaffold
+- Google Oauth2
+- Google Calendar API
+
+
+## Assumptions before making this appliaction
+
+- User will be booking the meeting or event in the timeslot of 30 Mins
+- There are 2 Scenarios:
+  - Host will create event and let the participants to join him as part of campaign and meet him.
+  - Host will share his meetsync link so that participants can create meeting on their own based on the availability of host.
+- Host will share either event link or meeting. User will be able to book the meeting with host once logging in.
+- Users can see the list of the events and meeting in their respective dashboard.
+- User can select the date and timeslot as per his availability based on host availability.
+- A Person can create meeting only for upcomming days. Means user cannot create meeting or create Event for yesterday.
+- Previous days are greyed out in calendar so that he cannot book those slots
+- Un available days are marked in reddish color so that we can inform users that host is not available in specified date!
+- while booking user can select more then 30 mins based on consecutive slot availability. so that time is continous.
+- Booked slots will be marked in red user cannot book that slot.
+- Integrating with google calendar and gmail so that meeting can be conducted in realtime.
 
 
 ## Run Locally
