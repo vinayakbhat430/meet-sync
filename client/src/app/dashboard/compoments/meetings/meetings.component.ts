@@ -132,6 +132,7 @@ export class MeetingsComponent implements OnInit {
       console.log("Calling update event service!");
       await this.calendarService.updateGoogleEvent(meeting.googleEventId,eventDetails).then(e=>{
         this.meetingform.reset();
+        this.isVisible = false;
         this.getListOfMeetings();
       }).catch(e=>{
         

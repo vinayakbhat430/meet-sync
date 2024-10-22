@@ -1,4 +1,4 @@
-import { Component, computed, OnDestroy, OnInit, Signal, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, Signal, signal } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -12,6 +12,7 @@ import { AvailabilityModel } from '../../../interfaces';
 import { ApiServiceService } from '../../../services/api-service.service';
 import { ConfigService } from '../../../services/config.service';
 import { Subject, takeUntil } from 'rxjs';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-availability',
@@ -19,6 +20,8 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./availability.component.less'],
 })
 export class AvailabilityComponent implements OnInit , OnDestroy{
+  messageService = inject(NzMessageService);
+
   weekDays: Signal<string[]> = signal(Info.weekdays());
   availableTimes: string[] = timeList;
 
@@ -90,6 +93,7 @@ export class AvailabilityComponent implements OnInit , OnDestroy{
     const postAvailability = this.apiService
       .postAvailability(daysAvailable)
       .subscribe((d) => {
+        this.messageService.success("Availability saved successfully!");
         this.configService.setAvailability(d)
       });
   }
