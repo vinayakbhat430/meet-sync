@@ -90,3 +90,33 @@ While using Docker and Kubernetes might seem complex at first, the benefits of h
 ![Database Idea](./images/database-idea.drawio.png)
 
 
+## Glimpse of application
+
+- Landing Page:
+  ![Landing page of application](./images/Homepage.png)
+
+- Dashboard:
+  ![Dashboard](./images/Dashboard.png)
+
+- Setup Availabilty:
+  ![Availabiltiy](./images/Availability.png)
+
+- Create Event:
+  ![Create Event](./images/CreateEvent.png)
+
+- Join Event/Custom meeting:
+  ![Join Custom meeting](./images/CreatingCustomMeeting.png)
+
+- List of events:
+  ![List of events](./images/Events.png)
+
+- List of meeting:
+  ![List of meeting](./images/CreatingCustomMeeting.png)
+
+- Update Meeting:
+  ![Update Meeting](./images/UpdatingTitle.png)
+
+- Event reflected in real time gmail and google calendar:
+  ![Google Mail](./images/EmailSentToParticipants.png)
+  ![Google Calendar](./images/EventReflectedInGoogleCalendar.png)
+
