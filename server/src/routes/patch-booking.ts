@@ -13,17 +13,24 @@ router.patch(
 
     const { name, email, picture } = currentUser(authorizationToken);
 
-    const booking = await Bookings.findById(bookingId);
+    const bookings = await Bookings.find({ googleEventId: bookingId });
 
-    if (!booking) {
-      return res.status(404).send({ message: "Booking not found" });
+    if (!bookings.length) {
+      return res.status(404).send({ message: "Bookings not found" });
     }
 
     const updates = req.body;
-    Object.assign(booking, updates);
 
-    await booking.save();
-    res.status(200).send(booking);
+    // Use Promise.all to handle the async saves in parallel
+    const savePromises = bookings.map((booking) => {
+      booking.name = updates.name || booking.name;
+      booking.additionalInfo = updates.additionalInfo || booking.additionalInfo;
+      return booking.save();
+    });
+
+    await Promise.all(savePromises);
+
+    res.status(200).send(bookings);
   }
 );
 

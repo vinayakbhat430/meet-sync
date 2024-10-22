@@ -58,6 +58,10 @@ export class MeetingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getListOfMeetings()
+  }
+
+  getListOfMeetings(){
     this.apiService.getMeetings().subscribe((d) => {
       this.meetingList.set(d);
     });
@@ -101,6 +105,8 @@ export class MeetingsComponent implements OnInit {
   editMeeting(meeting:Meeting){
     this.isVisible=true
     this.selectedMeeting.set(meeting)
+    this.meetingform.get('title')?.setValue(meeting.name);
+    this.meetingform.get('description')?.setValue(meeting.additionalInfo);
   }
 
   async updateEvent(meeting:Meeting| undefined){
@@ -125,9 +131,8 @@ export class MeetingsComponent implements OnInit {
       };
       console.log("Calling update event service!");
       await this.calendarService.updateGoogleEvent(meeting.googleEventId,eventDetails).then(e=>{
-        if(window.confirm("Please refresh to continue")){
-          window.location.reload()
-        }
+        this.meetingform.reset();
+        this.getListOfMeetings();
       }).catch(e=>{
         
       });

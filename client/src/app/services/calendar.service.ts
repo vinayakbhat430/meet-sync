@@ -288,11 +288,10 @@ export class CalendarService {
     htmlLink: string,
     googleEventId: string
   ) {
-    const postMeetingObservables = eventDetails.email.map((email) =>
-      this.apiService.patchMeeting(eventDetails.id || '', {
-        eventId: eventDetails.id || '',
+      this.apiService.patchMeeting(googleEventId || '', {
+        eventId: '',
         name: eventDetails.summary,
-        email: email.email,
+        email: eventDetails.email[0].email,
         additionalInfo: eventDetails.description || '',
         startTime: eventDetails.startDate,
         endTime: eventDetails.endDate,
@@ -300,16 +299,7 @@ export class CalendarService {
         attendees: eventDetails.email.map((d) => d.email),
         meetLink: htmlLink,
         googleEventId: googleEventId,
-      })
-    );
-
-    // Wait for all postMeeting API calls to complete using forkJoin
-    forkJoin(postMeetingObservables).subscribe({
-      next: (responses) => {},
-      error: (error) => {
-        console.error('Failed to save some meetings:', error);
-      },
-    });
+      }).subscribe((responses) => {});
   }
 
   /**

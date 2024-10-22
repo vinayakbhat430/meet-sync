@@ -46,7 +46,7 @@ export class ApiServiceService {
   }
 
   postMeeting(data: Meeting){
-    return this.http.post<Meeting>('/api/bookings',data)
+    return this.http.post<Meeting>('/api/booking',data)
   }
 
   patchMeeting(bookingId:string,data: Meeting){

@@ -4,7 +4,7 @@ import { Bookings } from "../models/bookings";
 import { Event } from "../models/event";
 
 const router = express.Router();
-router.post("/api/bookings", async (req: Request, res: Response) => {
+router.post("/api/booking", async (req: Request, res: Response) => {
   const authorizationToken = req.headers.authorization;
 
   const { name, email, picture } = currentUser(authorizationToken);

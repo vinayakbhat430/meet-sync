@@ -14,6 +14,7 @@ router.get("/api/bookings", async (req: Request, res: Response) => {
     email: email
   });
 
+
   if(!bookings){
     throw new NotFoundError()
   }
