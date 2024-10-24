@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: calendly-client
-        image: vinayakbhat430learn/calendly-client
+        image: vinayakbhat430learn/meet-sync-client
         resources:
           limits:
             memory: "4096Mi"
@@ -30,5 +30,5 @@ spec:
   ports:
   - name: calendly-client
     protocol: TCP
-    port: 4200
-    targetPort: 4200
+    port: 80
+    targetPort: 80

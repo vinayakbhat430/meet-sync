@@ -23,4 +23,4 @@ spec:
           service:
             name: calendly-client-srv
             port: 
-              number: 4200
+              number: 80
