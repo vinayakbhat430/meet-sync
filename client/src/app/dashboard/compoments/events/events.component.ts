@@ -58,7 +58,7 @@ export class EventsComponent implements OnInit, OnDestroy{
   }
 
   copyLink(eventId:string,email:string){
-    const url = `https://meet-sync.dev/join-event/${eventId}/${email}`
+    const url = `${window.location.origin}/join-event/${eventId}/${email}`
     navigator.clipboard.writeText(url);
     this.messageService.info("Copied Link successfully!")
   }
