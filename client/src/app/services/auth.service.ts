@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiServiceService } from './api-service.service';
-import { CalendarService } from './calendar.service';
+import { ConfigService } from './config.service';
 
 declare var google: any;
 
@@ -12,7 +12,7 @@ declare var google: any;
 export class AuthService {
   router = inject(Router);
   apiService = inject(ApiServiceService);
-  calendarService = inject(CalendarService);
+  configService = inject(ConfigService);
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   private redirectUrl: string | null = null;
@@ -69,7 +69,9 @@ export class AuthService {
     sessionStorage.setItem("authToken", credential);
 
     this.loggedIn.next(true);
-    this.apiService.currentUser().subscribe();
+    this.apiService.currentUser().subscribe(d=> {
+      this.configService.setUser(d.user)
+    });
     const targetURL = this.getRedirectUrl() || "/dashboard"
     this.router.navigate([targetURL]);
   }

@@ -22,6 +22,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.configService.user.subscribe(user=>{
+      console.log("Got user", user)
       this.pictureUrl.set(user.picture)
       this.isLoggedIn.set(!!user.email)
     })

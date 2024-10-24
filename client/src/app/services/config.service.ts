@@ -16,6 +16,9 @@ export class ConfigService {
   get user(): Observable<User> {
     return this._user.asObservable();
   }
+  setUser(user: User){
+    this._user.next(user);
+  }
 
   private _availabilityTemplate: Availability = {
     email: '',

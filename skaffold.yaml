@@ -1,10 +1,10 @@
 apiVersion: skaffold/v4beta11
 kind: Config
 metadata:
-  name: calendly-clone
+  name: meet-sync
 build:
   artifacts:
-    - image: vinayakbhat430learn/calendly-client
+    - image: vinayakbhat430learn/meet-sync-client
       context: client
       sync:
         manual:
@@ -12,7 +12,7 @@ build:
             src: src/**/*.ts
       docker:
         dockerfile: Dockerfile
-    - image: vinayakbhat430learn/calendly-server
+    - image: vinayakbhat430learn/meet-sync-server
       context: server
       sync:
         manual:
