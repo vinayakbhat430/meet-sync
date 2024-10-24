@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, output, Signal, signal, WritableSignal } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { Events } from '../../interfaces';
 import { ConfigService } from '../../services/config.service';
@@ -26,6 +26,8 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   currentUserEmail: WritableSignal<string> = signal('')
 
   slots:Signal<number[]>  =signal(Array.from({ length: 10 }, (_, i) => i + 1))
+
+  closePopup = output<boolean>()
 
   
   private readonly ngUnsubscribe$ = new Subject<void>()
@@ -56,6 +58,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     const postPayload:Events = {...formData , duration: formData.duration * 30, bookings:[],email:this.currentUserEmail()}
     this.apiService.postEvents(postPayload).subscribe(d =>{
       this.messageService.success('Created Event Successfully');
+      this.closePopup.emit(false);
     })
 
   }

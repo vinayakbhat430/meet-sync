@@ -29,7 +29,7 @@
 >
     <ng-template #modalContent>
         @if(isLoggedIn()){
-            <app-create-event></app-create-event>
+            <app-create-event (closePopup)="isCreateEvent = $event"></app-create-event>
         }
         @else {
             <div style="font-size: 1.2rem;">Please Login to create Event</div>
