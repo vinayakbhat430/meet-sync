@@ -1,15 +1,19 @@
 <nz-row nzAlign="middle" nzJustify="space-between" class="app-header p-4">
-    <nz-col nzSpan="12" (click)="navigateToDashboard()">
-        <img src="meet-sync-logo.png" alt="Meet-Sync Logo" class="image" />
+    <nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="12" (click)="navigateToLanding()">
+        <img src="meet-sync-logo.png" alt="Meet-Sync Logo" class="image" style="width: 100%; max-width: 150px;">
     </nz-col>
-    <nz-col nzSpan="12">
+    <nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="12">
         <nz-row nzAlign="middle" nzJustify="end" [nzGutter]="16">
-            <nz-col class="gutter-row">
-                <button nz-button nzType="primary" (click)="openCreateEvent()"><span nz-icon nzType="form" nzTheme="outline"
-                        class="icon"></span>Create Event</button>
+            <nz-col nzLg="auto" nzMd="auto" nzSm="auto" nzXs="auto" class="gutter-row">
+                <button nz-button nzType="primary" (click)="openCreateEvent()" class="p-2">
+                    <span nz-icon nzType="form" nzTheme="outline" class="icon"></span>
+                    @if(!isMobileView){
+                        <span>Create Event</span>
+                    }
+                </button>
             </nz-col>
-            <nz-col class="gutter-row">
-                <nz-avatar nzSize="large" class="gutter-row" [nzSrc]="pictureUrl()"></nz-avatar>
+            <nz-col nzLg="auto" nzMd="auto" nzSm="auto" nzXs="auto" class="gutter-row" (click)="navigateToDashboard()">
+                <nz-avatar nzSize="large" [nzSrc]="pictureUrl()" class="gutter-row"></nz-avatar>
             </nz-col>
         </nz-row>
     </nz-col>
@@ -20,16 +24,15 @@
       [nzTitle]="undefined"
       [nzContent]="modalContent"
       [nzFooter]="null"
-      [nzWidth]="'70vw'"
+      [nzWidth]="isMobileView ? '90vw' : '70vw'"
       (nzOnCancel)="isCreateEvent = false"
-    >
-      <ng-template #modalContent>
+>
+    <ng-template #modalContent>
         @if(isLoggedIn()){
             <app-create-event></app-create-event>
         }
         @else {
-            <div>Please Login to create Event</div>
+            <div style="font-size: 1.2rem;">Please Login to create Event</div>
         }
-      </ng-template>
-
-    </nz-modal>
+    </ng-template>
+</nz-modal>

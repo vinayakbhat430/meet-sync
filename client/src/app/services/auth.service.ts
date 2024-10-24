@@ -12,7 +12,6 @@ declare var google: any;
 export class AuthService {
   router = inject(Router);
   apiService = inject(ApiServiceService);
-  configService = inject(ConfigService);
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   private redirectUrl: string | null = null;
@@ -69,9 +68,7 @@ export class AuthService {
     sessionStorage.setItem("authToken", credential);
 
     this.loggedIn.next(true);
-    this.apiService.currentUser().subscribe(d=> {
-      this.configService.setUser(d.user)
-    });
+    this.apiService.currentUser().subscribe();
     const targetURL = this.getRedirectUrl() || "/dashboard"
     this.router.navigate([targetURL]);
   }

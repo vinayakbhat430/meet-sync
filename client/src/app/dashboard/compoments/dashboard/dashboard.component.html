@@ -1,4 +1,4 @@
-@if(dashboard()){
+@if(dashboard()) {
     <nz-row>
         <nz-col nzSpan="24">
             <div class="cards">
@@ -17,12 +17,12 @@
             </div>
         </nz-col>
         <nz-col nzSpan="24">
-            <nz-row class="p-8">
-                <nz-col nzSpan="4">
+            <nz-row class="p-8" nzAlign="middle" nzJustify="center">
+                <nz-col nzXs="20" nzSm="16" nzMd="6" nzLg="4">
                     <nz-avatar nzSize="large" class="gutter-row" [nzSrc]="dashboard()?.picture"></nz-avatar>
                 </nz-col>
-                <nz-col nzSpan="20">
-                    <h2>{{dashboard()?.email}}</h2>
+                <nz-col nzXs="24" nzSm="18" nzMd="18" nzLg="18">
+                    <div class="email">{{dashboard()?.email}}</div>
                 </nz-col>
             </nz-row>
         </nz-col>
@@ -30,7 +30,7 @@
             Copy Below Link to share with people to book meeting with you:
             <br/>
             <br/>
-            <h3>{{connectLink()}}<span nz-icon nzType="copy" nzTheme="outline" (click)="copyLink()"></span></h3>
+            <p class="connect-link">{{connectLink()}}<span nz-icon nzType="copy" nzTheme="outline" (click)="copyLink()"></span></p>
         </nz-col>
     </nz-row>
 }

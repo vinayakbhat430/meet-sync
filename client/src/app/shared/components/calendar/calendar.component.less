@@ -3,11 +3,19 @@
     justify-content: center;
     align-items: center;
     padding: 20px;
+
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 }
 
 .calendar {
-    .calendar-headline{
+    .calendar-headline {
         padding: 20px;
+
+        @media (max-width: 768px) {
+            padding: 10px;
+        }
     }
 
     .calendar-headline-month,
@@ -16,6 +24,14 @@
         color: #666;
         font-weight: bold;
         font-size: 1rem;
+
+        @media (max-width: 768px) {
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 0.8rem;
+        }
     }
 
     .calendar-weeks-grid {
@@ -27,11 +43,18 @@
         color: #666;
         gap: 5px;
 
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(7, 4rem);
+            gap: 4px;
+        }
+
+        @media (max-width: 480px) {
+            grid-template-columns: repeat(7, 3rem);
+            gap: 3px;
+        }
+
         .calendar-weeks-grid-cell {
             padding: 10px;
-            cursor: none;
-            pointer-events: none;
-            user-select: none;
         }
     }
 
@@ -41,41 +64,49 @@
         text-align: center;
         gap: 5px;
 
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(7, 4rem);
+            gap: 4px;
+        }
+
+        @media (max-width: 480px) {
+            grid-template-columns: repeat(7, 3rem);
+            gap: 3px;
+        }
+
         .calendar-grid-cell {
             cursor: pointer;
             padding: 15px;
             background-color: #f9f9f9;
             border-radius: 4px;
-            user-select: none;
+
+            @media (max-width: 768px) {
+                padding: 10px;
+            }
+
+            @media (max-width: 480px) {
+                padding: 8px;
+            }
         }
-        .unavailable-days{
+
+        .unavailable-days {
             background-color: #FF859D;
-            color:white;
+            color: white;
             cursor: not-allowed;
             opacity: 0.6;
             position: relative;
+
             &::after {
-                content: 'Not Available!'; /* The message to display */
-                position: absolute;
-                bottom: 100%; /* Position above the element */
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: #333;
-                color: white;
-                padding: 5px;
-                border-radius: 4px;
-                opacity: 0;
-                visibility: hidden;
-                white-space: nowrap;
                 font-size: 12px;
-                z-index: 10;
-                transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-              }
-              
-              &:hover::after {
-                opacity: 1;
-                visibility: visible;
-              }
+
+                @media (max-width: 768px) {
+                    font-size: 10px;
+                }
+
+                @media (max-width: 480px) {
+                    font-size: 8px;
+                }
+            }
         }
 
         .calendar-grid-cell-active {
@@ -87,14 +118,7 @@
             background-color: #e0e0e0;
             color: #999;
             cursor: not-allowed;
-            pointer-events: none;
             opacity: 0.6;
-
-            &:hover {
-                background-color: #e0e0e0;
-                cursor: not-allowed;
-            }
         }
     }
 }
-

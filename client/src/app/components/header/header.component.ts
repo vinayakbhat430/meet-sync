@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, HostListener, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { Router } from '@angular/router';
 import { ConfigService } from '../../services/config.service';
@@ -18,6 +18,16 @@ export class HeaderComponent implements OnInit {
 
   isCreateEvent = false;
   isLoggedIn: WritableSignal<boolean> = signal(false);
+  isMobileView = false;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.checkViewport();
+  }
+
+  checkViewport(): void {
+    this.isMobileView = window.innerWidth <= 768; // Set to true for devices with width <= 768px
+  }
   
 
   ngOnInit(): void {
@@ -25,7 +35,8 @@ export class HeaderComponent implements OnInit {
       console.log("Got user", user)
       this.pictureUrl.set(user.picture)
       this.isLoggedIn.set(!!user.email)
-    })
+    });
+    this.checkViewport()
   }
 
   openCreateEvent(){
@@ -34,6 +45,10 @@ export class HeaderComponent implements OnInit {
 
   navigateToDashboard(){
     this.router.navigate(["/dashboard"])
+  }
+
+  navigateToLanding(){
+    this.router.navigate(["/"])
   }
 
 }

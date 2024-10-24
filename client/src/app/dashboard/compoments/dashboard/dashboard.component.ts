@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.dashboard$.subscribe(d=>{
       this.dashboard.set(d);
-      this.connectLink.set(`https://meet-sync.dev/create-meeting/${d.email}`)
+      this.connectLink.set(`${window.location.origin}/create-meeting/${d.email}`)
     })
   }
 

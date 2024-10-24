@@ -1,4 +1,4 @@
-<nz-row nzAlign="middle" nzJustify="start" nzGutter="32">
+<nz-row nzAlign="middle" nzJustify="start" [nzGutter]="[16,16]">
     @for(event of eventsList(); track $index){
         <nz-col nzLg="8" nzSm="24" class="gutter-row">
             <nz-card>
@@ -9,12 +9,12 @@
                     <nz-col nzSpan="24" class="py-2">
                         {{event.description}}
                     </nz-col>
-                    <nz-col nzLg="12" nzSm="24" class="py-2 opacity">{{event.isPrivate ? 'Private':'Public'}}</nz-col>
-                    <nz-col nzLg="12" nzSm="24" class="py-2 opacity">{{event.bookings.length / 2}} bookings</nz-col>
-                    <nz-col nzLg="12" nzMd="24" nzSm="24" class="py-2">
+                    <nz-col nzLg="12" nzSm="24" nzXs="24" class="py-2 opacity">{{event.isPrivate ? 'Private':'Public'}}</nz-col>
+                    <nz-col nzLg="12" nzSm="24" nzXs="24" class="py-2 opacity">{{event.bookings.length / 2}} bookings</nz-col>
+                    <nz-col nzLg="12" nzMd="24" nzXs="24" nzSm="24" class="py-2">
                         <button nz-button nzType="primary" nzDanger (click)="showDeleteConfirm(event.id)"><span nz-icon nzType="delete" nzTheme="outline"></span>Delete Event</button>
                     </nz-col>
-                    <nz-col nzLg="12" nzMd="24" nzSm="24" class="py-2">
+                    <nz-col nzLg="12" nzMd="24" nzSm="24" nzXs="24" class="py-2">
                         <button nz-button nzType="primary" (click)="copyLink(event.id, event.email)"><span nz-icon nzType="link" nzTheme="outline"></span>Copy Link</button>
                     </nz-col>
                 </nz-row>

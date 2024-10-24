@@ -1,5 +1,5 @@
 <nz-layout class="layout">
-    <nz-sider nzWidth="200px" nzTheme="light">
+    <nz-sider nzCollapsible nzBreakpoint="lg" [nzCollapsedWidth]="0" nzWidth="200px" nzTheme="light">
         <ul nz-menu nzTheme="light" nzMode="vertical">
             @for(menu of menuList(); track $index){
                 <li nz-menu-item [nzSelected]="selectedMenu() === menu.title" (click)="selectedMenu.set(menu.title)">
@@ -10,12 +10,12 @@
         </ul>
     </nz-sider>
     <nz-layout>
-        <nz-header class="mx-4 mb-2 p-4">
+        <nz-header class="mx-2 mb-2 p-4">
             <h1>
                 {{selectedMenu()}}
             </h1>
         </nz-header>
-        <nz-content class="mx-4">
+        <nz-content class="mx-2">
             <div class="inner-content">
                 @switch (selectedMenu()) {
                     @case ('Dashboard') {

@@ -1,54 +1,123 @@
 /* You can add global styles to this file, and also import other style files */
-body{
+body {
     font-family: "Montserrat", sans-serif;
 }
 
-.flex{
+.flex {
     display: flex;
 }
 
-.align-center{
+.align-center {
     align-items: center;
 }
 
-.justify-center{
+.justify-center {
     justify-content: center;
 }
 
 
 
-/* Using 0.25 rem to generalize 4px (linear) increments */ 
-.loop(@index) when (@index >= 0) {
+/* Using 0.25 rem to generalize 4px (linear) increments */
+.loop(@index) when (@index >=0) {
     .m-@{index} {
         margin: (@index * 0.25rem) !important;
     }
-    .mt-@{index}{
+
+    .mt-@{index} {
         margin-top: (@index * 0.25rem) !important;
     }
+
     .mx-@{index} {
         margin-left: (@index * 0.25rem) !important;
         margin-right: (@index * 0.25rem) !important;
     }
+
     .my-@{index} {
         margin-top: (@index * 0.25rem) !important;
         margin-bottom: (@index * 0.25rem) !important;
     }
+
     .p-@{index} {
         padding: (@index * 0.25rem) !important;
     }
-    .py-@{index}{
+
+    .py-@{index} {
         padding-top: (@index * 0.25rem) !important;
         padding-bottom: (@index * 0.25rem) !important;
     }
-    .px-@{index}{
+
+    .px-@{index} {
         padding-left: (@index * 0.25rem) !important;
         padding-right: (@index * 0.25rem) !important;
     }
+
     .loop(@index - 1);
 }
 
 .loop(20);
 
-.opacity{
+.opacity {
     opacity: 50%;
+}
+
+.main-container {
+    padding: 5rem;
+
+    h1 {
+        font-size: 4rem; // Adjusted default size for better scaling
+        font-weight: 700;
+        color: #1890ff;
+        text-align: center; // Center align for better appearance on small screens
+    }
+
+    p {
+        font-size: 1.2rem;
+        font-weight: 500;
+        text-align: center; // Center align for better appearance on small screens
+    }
+
+    .google-signin {
+        width: 80%; // Adjusted width for smaller screens
+        max-width: 400px; // Set max width for larger screens
+        margin: 0 auto; // Center the button
+    }
+
+    .image {
+        margin: 2rem auto; // Reduced margin for smaller screens
+        max-width: 100%; // Ensure it scales to the container
+        min-width: 16rem; // Keep minimum width
+        width: 100%;
+        aspect-ratio: 4/3;
+        object-fit: contain;
+        display: block; // Ensure it behaves like a block element for centering
+    }
+
+    // Responsive adjustments
+    @media (max-width: 768px) {
+        padding: 3rem; // Reduce padding on smaller screens
+
+        h1 {
+            font-size: 3rem; // Smaller font size on smaller screens
+        }
+
+        p {
+            font-size: 1rem; // Slightly smaller font for better fit
+        }
+
+        .google-signin {
+            width: 90%; // Full width on smaller screens
+        }
+    }
+
+    @media (max-width: 480px) {
+        padding: 2rem; // Further reduce padding
+
+        h1 {
+            font-size: 2.5rem; // Further decrease font size
+        }
+
+        p {
+            font-size: 0.9rem; // Even smaller font for mobile
+        }
+    }
 }

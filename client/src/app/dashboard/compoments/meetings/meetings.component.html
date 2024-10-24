@@ -24,10 +24,17 @@
                     <nz-col nzSpan="24" class="py-2 opacity">
                         {{meeting.startTime|date: 'hh:mm a'}} - {{meeting.endTime|date: 'hh:mm a'}}
                     </nz-col>
-                    <nz-col nzLg="12" nzMd="24" nzSm="24" class="py-2">
-                        <button nz-button nzType="primary" (click)="joinMeeting(meeting.meetLink)"><span nz-icon nzType="link" nzTheme="outline"></span>Join Meeting</button>
+                    <nz-col nzSpan="24">
+                        <ul>
+                            @for(attendee of meeting.attendees; track $index){
+                                <li>{{attendee}}</li>
+                            }
+                        </ul>
                     </nz-col>
-                    <nz-col nzLg="12" nzMd="24" nzSm="24" class="py-2">
+                    <nz-col nzLg="12" nzMd="24" nzSm="24" nzXs="24" class="py-2">
+                        <button nz-button nzType="primary" (click)="joinMeeting(meeting.meetLink)"><span nz-icon nzType="link" nzTheme="outline"></span>Open Calendar</button>
+                    </nz-col>
+                    <nz-col nzLg="12" nzMd="24" nzSm="24" nzXs="24" class="py-2">
                         <button nz-button nzType="primary" nzDanger (click)="showDeleteConfirm(meeting.id!,meeting.googleEventId)"><span nz-icon nzType="delete" nzTheme="outline"></span>Cancel meeting</button>
                     </nz-col>
                     
