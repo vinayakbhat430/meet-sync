@@ -14,6 +14,8 @@ A scheduling app to schedule the meeting without conflicts or overlap of the mee
 - Express
 - Docker
 - Kubernetes
+- Google Cloud services (Kubernetes Cluster)
+- Go Daddy(DNS)
 - Skaffold
 - Google Oauth2
 - Google Calendar API
