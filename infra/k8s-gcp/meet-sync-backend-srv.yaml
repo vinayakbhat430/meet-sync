@@ -14,11 +14,11 @@ spec:
     spec:
       containers:
       - name: meet-sync
-        image: vinayakbhat430learn/meet-sync-server
+        image: us.gcr.io/meet-sync-438611/meet-sync-server
         resources:
           limits:
             memory: "2048Mi"
-            cpu: "1000m"
+            cpu: "500m"
         env:
           - name: MONGO_URI
             value: 'mongodb://meet-sync-mongo-srv:27017/meet-sync'

@@ -7,10 +7,10 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: meet-sync.dev
+  - host: meet-sync.vinayakabhat.in
     http:
       paths:
-      - pathType: Prefix
+      - pathType: ImplementationSpecific
         path: "/api/?(.*)"
         backend:
           service:

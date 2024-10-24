@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meet-sync-monogo-depl
+spec:
+  selector:
+    matchLabels:
+      app: meet-sync-mongo
+  template:
+    metadata:
+      labels:
+        app: meet-sync-mongo
+    spec:
+      containers:
+      - name: meet-sync-mongo
+        image: mongo
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meet-sync-mongo-srv
+spec:
+  selector:
+    app: meet-sync-mongo
+  ports:
+  - name: db
+    protocol: TCP
+    port: 27017
+    targetPort: 27017
