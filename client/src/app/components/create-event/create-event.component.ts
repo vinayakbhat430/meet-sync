@@ -2,7 +2,7 @@ import { Component, inject, OnDestroy, OnInit, output, Signal, signal, WritableS
 import { SharedModule } from '../../shared/shared.module';
 import { Events } from '../../interfaces';
 import { ConfigService } from '../../services/config.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApiServiceService } from '../../services/api-service.service';
@@ -44,7 +44,12 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.configService.user.subscribe(user=>{
-      this.currentUserEmail.set(user.email)
+      if(user){
+        this.currentUserEmail.set(user.email)
+      }
+      else{
+        this.configService.fetchUser();
+      }
     });
   }
 
@@ -58,6 +63,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     const postPayload:Events = {...formData , duration: formData.duration * 30, bookings:[],email:this.currentUserEmail()}
     this.apiService.postEvents(postPayload).subscribe(d =>{
       this.messageService.success('Created Event Successfully');
+      this.configService.refreshEventDetails()
       this.closePopup.emit(false);
     })
 

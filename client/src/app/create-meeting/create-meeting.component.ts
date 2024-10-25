@@ -70,6 +70,7 @@ export class CreateMeetingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.commonConfigService.fetchUser();
     this.calendarService.initializeGapiClient();
     this.calendarService.initializeGisClient();
     this.getCurrentUser();

@@ -1,10 +1,11 @@
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { ApiServiceService } from '../../../services/api-service.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { EventsResponse, Meeting, User } from '../../../interfaces';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Location } from '@angular/common';
+import { ConfigService } from '../../../services/config.service';
 
 declare const createGoogleEvent: any;
 
@@ -16,6 +17,8 @@ declare const createGoogleEvent: any;
 export class EventsComponent implements OnInit, OnDestroy{
   apiService = inject(ApiServiceService);
 
+  configService = inject(ConfigService);
+
   messageService = inject(NzMessageService);
   modal = inject(NzModalService);
   location = inject(Location)
@@ -26,8 +29,10 @@ export class EventsComponent implements OnInit, OnDestroy{
   eventsList:WritableSignal<EventsResponse[]> = signal([]);
 
   ngOnInit(): void {
-    this.apiService.getEvents().subscribe(d=>{
-      this.eventsList.set(d)
+    this.configService.refreshEventDetails()
+
+    this.configService.eventDetails.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(eventDetails =>{
+      this.eventsList.set(eventDetails)
     })
   }
 
@@ -53,7 +58,8 @@ export class EventsComponent implements OnInit, OnDestroy{
   deleteEvent(eventId:string){
     this.apiService.deleteEvent(eventId).subscribe(res=>{
       this.messageService.error("Deleted Event successfully!");
-      this.eventsList.set(this.eventsList().filter(event=> event.id !== eventId))
+      this.eventsList.set(this.eventsList().filter(event=> event.id !== eventId));
+      this.configService.refreshEventDetails();
     });
   }
 

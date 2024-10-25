@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiServiceService } from './api-service.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Availability, User } from '../interfaces';
+import { Availability, EventDetails, EventsResponse, User } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -35,15 +35,26 @@ export class ConfigService {
     this._availability.next(updatedAvailability);
   }
 
+  private _events= new BehaviorSubject<EventsResponse[]>([]);
+  get eventDetails():Observable<EventsResponse[]>{
+    return this._events.asObservable()
+  }
+  setEventDetails(eventDetails:EventsResponse[]){
+    this._events.next(eventDetails);
+  }
+
   constructor(private apiService: ApiServiceService) {
-    this.apiService.currentUser().subscribe((d) => {
+    this.fetchUser();
+  }
+
+  fetchUser(){
+    const fetchedUser  = this.apiService.currentUser().subscribe((d) => {
       if(d){
         this._user.next(d.user);
         this.fetchAvailability();
       }
+      fetchedUser.unsubscribe();
     });
-
-    
   }
 
   fetchAvailability(){
@@ -52,5 +63,13 @@ export class ConfigService {
         this._availability.next(avblty);
       }
     });
+  }
+
+  refreshEventDetails(){
+    this.apiService.getEvents().subscribe(events =>{
+      if(events){
+        this._events.next(events);
+      }
+    })
   }
 }

@@ -12,6 +12,7 @@ declare var google: any;
 export class AuthService {
   router = inject(Router);
   apiService = inject(ApiServiceService);
+  configService = inject(ConfigService)
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   private redirectUrl: string | null = null;
